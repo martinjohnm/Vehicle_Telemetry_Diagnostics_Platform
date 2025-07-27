@@ -1,0 +1,15 @@
+# Node.js
+node_modules/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Rust
+target/
+
+# OS files
+.DS_Store
+.env

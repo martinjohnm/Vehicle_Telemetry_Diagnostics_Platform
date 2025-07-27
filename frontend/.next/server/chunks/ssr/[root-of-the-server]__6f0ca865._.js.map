@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
+    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///home/martin/Documents/programming-projects/car-telematics/frontend/app/cars/page.tsx"],"sourcesContent":["\n\n\nexport default function Page() {\n    return (\n    <div >\n        \n    </div>\n    )\n}"],"names":[],"mappings":";;;;;AAGe,SAAS;IACpB,qBACA,8OAAC;;;;;AAIL","debugId":null}}]
+}
