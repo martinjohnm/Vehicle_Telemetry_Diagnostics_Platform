@@ -21,7 +21,7 @@ export class CarManager {
 
     public addCar(ws : WebSocket) {
         const id =  this.getRandomId();
-        const car = new Car()
+        const car = new Car(id, ws)
         this.cars.set(id, car)
         this.registerOnClose(ws, id)
     }
