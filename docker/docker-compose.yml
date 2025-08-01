@@ -5,9 +5,9 @@ version : '3.8'
 
 
 services: 
-  redis: 
+  redis_car_telematics: 
     image: redis:latest
-    container_name: redis
+    container_name: redis_car_telematics
     ports: 
-      - "6380:6380"
+      - "6380:6379"
     
