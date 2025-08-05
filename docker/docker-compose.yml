@@ -9,5 +9,5 @@ services:
     image: redis:latest
     container_name: redis_car_telematics
     ports: 
-      - "6380:6379"
+      - "6379:6379"
     

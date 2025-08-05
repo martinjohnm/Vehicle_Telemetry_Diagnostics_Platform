@@ -43,4 +43,33 @@ export class SubsciptionManager {
         const parsedMessage = JSON.parse(message);
         this.reverseSubscriptions.get(channel)?.forEach(s => UserManager.getInstance())
     }
+
+    public unsubscribe(userId : string, subscription : string) {
+        const existingSubscriptions = this.subscriptions.get(userId)
+
+        if (existingSubscriptions) {
+            this.subscriptions.set(userId, existingSubscriptions.filter(s => s!== userId));
+
+        }
+
+        const reverseExistingSubscriptions = this.reverseSubscriptions.get(subscription)
+
+        if (reverseExistingSubscriptions) {
+            this.reverseSubscriptions.set(subscription, reverseExistingSubscriptions.filter(s => s!== userId))
+
+            if (this.reverseSubscriptions.get(subscription)?.length === 0) {
+                this.reverseSubscriptions.delete(subscription);
+                this.redisClient.unsubscribe(subscription)
+            }
+        }
+    }
+
+    public userLeft(userId : string) {
+        console.log("user left " + userId);
+        this.subscriptions.get(userId)?.forEach(s => this.unsubscribe(userId, s))
+    }
+
+    getSubscriptions(userId : string) {
+        return this.subscriptions.get(userId) || [];
+    }
 }

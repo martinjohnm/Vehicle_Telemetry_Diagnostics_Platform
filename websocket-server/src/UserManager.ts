@@ -1,5 +1,6 @@
 import { WebSocket } from "ws";
 import { User } from "./User";
+import { SubsciptionManager } from "./SubscriptionManager";
 
 
 
@@ -25,7 +26,10 @@ export class UserManager {
         const id = this.getRandomId()
         const user = new User(id, ws)
         this.users.set(id, user)
+        this.registerOnClose(ws, id)
 
+        console.log(this.users);
+        
 
     }
 
@@ -36,6 +40,7 @@ export class UserManager {
     private registerOnClose(ws : WebSocket, id : string) {
         ws.on("close", () => {
             this.users.delete(id)
+            SubsciptionManager.getInstance().userLeft(id)
         })
     }
 
