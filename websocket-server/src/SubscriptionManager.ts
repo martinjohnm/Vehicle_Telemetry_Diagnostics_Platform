@@ -63,4 +63,13 @@ export class SubsciptionManager {
             }
         }
     }
+
+    public userLeft(userId : string) {
+        console.log("user left " + userId);
+        this.subscriptions.get(userId)?.forEach(s => this.unsubscribe(userId, s))
+    }
+
+    getSubscriptions(userId : string) {
+        return this.subscriptions.get(userId) || [];
+    }
 }
