@@ -3,21 +3,11 @@
 
 import { WebSocketServer } from "ws"
 import { SubsciptionManager } from "./SubscriptionManager"
+import { UserManager } from "./UserManager"
 
 const wss = new WebSocketServer({ port: 3001 })
 
 
-async function main() {
-
-    while (true) {
-        const response = await SubsciptionManager.getInstance().redisClient.rPop("car_telematics" as string)
-
-        console.log(response);
-        
-    }
-
-
-}
-
-main()
-
+wss.on("connection", (ws) => {
+    UserManager.getInstance().addUser(ws)
+})

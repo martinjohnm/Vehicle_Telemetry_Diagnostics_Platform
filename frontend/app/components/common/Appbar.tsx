@@ -18,20 +18,20 @@ export const Appbar = () => {
                 </div>
                 
                 <div className="text-white font-semibold" onClick={() => router.push("/trade")}>
-                    Trade
+                    Cars
                 </div>
             
                 <div className="text-white font-semibold" onClick={() => router.push("/markets")}>
-                    Markets
+                    Dashboard
                 </div>
 
             
 
             </div>
 
-            <div className="flex justify-center items-center gap-2">
+            {/* <div className="flex justify-center items-center gap-2">
                 <button>Hia</button>
-            </div>
+            </div> */}
         </div>
     </div>
 }
