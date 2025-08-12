@@ -41,7 +41,7 @@ export class SubsciptionManager {
 
     private redisCallBackHandler = (message : string, channel : string) => {
         const parsedMessage = JSON.parse(message);
-        this.reverseSubscriptions.get(channel)?.forEach(s => UserManager.getInstance())
+        this.reverseSubscriptions.get(channel)?.forEach(s => UserManager.getInstance().getUser(s)?.emit(parsedMessage))
     }
 
     public unsubscribe(userId : string, subscription : string) {
