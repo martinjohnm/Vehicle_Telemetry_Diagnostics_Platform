@@ -17,7 +17,7 @@ export const Appbar = () => {
                     CARS-102
                 </div>
                 
-                <div className="text-white font-semibold" onClick={() => router.push("/trade")}>
+                <div className="text-white font-semibold" onClick={() => router.push("/cars")}>
                     Cars
                 </div>
             
