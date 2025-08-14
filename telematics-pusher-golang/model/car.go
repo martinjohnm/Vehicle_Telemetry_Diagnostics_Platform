@@ -7,6 +7,9 @@ import (
 )
 
 type CarTelemetry struct {
+
+	Type      string  `json:"type"`
+
 	ID        string  `json:"id"`
 	City      string  `json:"city"`
 	Speed     float64 `json:"speed"`
