@@ -40,6 +40,7 @@ func NewCarManager(redisAddr, channel string) *CarManager {
 
 
 type CarData struct {
+	
     ID        string    `json:"id"`
     Speed     float64   `json:"speed"`
     Latitude  float64   `json:"lat"`
@@ -178,6 +179,7 @@ func (m *CarManager) SimulateAndPushWithContext(ctx context.Context, carID strin
 
 		
 			car := model.CarTelemetry{
+				Type:      "CAR",	
 				ID:        carID,
 				Speed:     carInit.Speed,
 				Latitude:  carInit.Latitude,
@@ -185,6 +187,7 @@ func (m *CarManager) SimulateAndPushWithContext(ctx context.Context, carID strin
 				Direction: carInit.Direction,
 				FuelLevel: rand.Float64() * 100,
 				Timestamp: time.Now().Unix(),
+				City: carInit.City,
 			}
 
 			newcar:= model.MoveCar(car, 1.0)
