@@ -2,18 +2,19 @@ import { useEffect, useState } from "react";
 import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import { SignalingManager } from "../../utils/SignalingManager";
 import 'leaflet/dist/leaflet.css';
+import type { IncomingMessage } from "../../types/in";
 
 
 
 interface MapState {
   type : string;
-  id   : string;
+  id   : number;
   city : string;
-  speed : string;
+  speed : number;
   latitude : number;
   longitude : number;
-  fuel_level : string;
-  direction : string;
+  fuel_level : number;
+  direction : number;
   status : string;
   timestamp  :string
 }
@@ -24,13 +25,13 @@ const position: [number, number] = [50.8295, 12.9150];
 
   const [mapParams , setMapParams] = useState<MapState>({
     type : "",
-    id: "",
+    id: 0,
     city : "",
-    speed : "",
+    speed : 0,
     latitude : 0,
     longitude : 0,
-    fuel_level : "",
-    direction : "",
+    fuel_level : 0,
+    direction : 0,
     status : "",
     timestamp  :""
   })
@@ -45,7 +46,7 @@ const position: [number, number] = [50.8295, 12.9150];
 
       SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE", "params" : [car]})
 
-      SignalingManager.getInstance().registerCallBack("CAR", (data: any) => {
+      SignalingManager.getInstance().registerCallBack("CAR", (data: IncomingMessage) => {
         setMapParams({
           type : data.type,
           id: data.id,
