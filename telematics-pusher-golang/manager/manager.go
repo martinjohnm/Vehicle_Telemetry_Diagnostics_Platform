@@ -76,67 +76,6 @@ func (cm *CarManager) LoadFromJSON(filename string) error {
     return nil
 }
 
-// func (m *CarManager) PushTelemetry (car model.CarTelemetry) error {
-// 	data, err := json.Marshal(car)
-
-// 	if err != nil {
-// 		return  err
-// 	}
-
-// 	return  m.client.Publish(m.ctx, m.channel, data).Err()
-// }
-
-// func (m *CarManager) SimulateAndPush(carID string) {
-// 	for {
-// 		car := model.CarTelemetry{
-// 			ID:        carID,
-// 			Speed:     rand.Float64() * 100,
-// 			Latitude:  rand.Float64()*180 - 90,
-// 			Longitude: rand.Float64()*360 - 180,
-// 			FuelLevel: rand.Float64() * 100,
-// 			Timestamp: time.Now().Unix(),
-// 		}
-
-// 		err := m.PushTelemetry(car)
-
-// 		if err != nil {
-// 			log.Println("error pushing to telemetry:", err)
-// 		} else {
-// 			log.Println("published data for car:", car.ID)
-// 		}
-
-// 		time.Sleep(1 * time.Second)
-// 	}
-// }
-
-// func (m *CarManager) SimulateAndPushWithContext(ctx context.Context, carID string) {
-// 	ticker := time.NewTicker(1 * time.Second)
-// 	defer ticker.Stop()
-
-// 	for {
-// 		select {
-// 		case <-ctx.Done():
-// 			log.Println("Stopping telemetry for", carID)
-// 			return
-// 		case <-ticker.C:
-// 			car := model.CarTelemetry{
-// 				ID:        carID,
-// 				Speed:     rand.Float64() * 100,
-// 				Latitude:  rand.Float64()*180 - 90,
-// 				Longitude: rand.Float64()*360 - 180,
-// 				FuelLevel: rand.Float64() * 100,
-// 				Timestamp: time.Now().Unix(),
-// 			}
-
-// 			if err := m.PushTelemetry(car); err != nil {
-// 				log.Println("Error pushing telemetry:", err)
-// 			} else {
-// 				log.Println("Published data for car", car.ID)
-// 			}
-// 		}
-// 	}
-// }
-
 
 
 
