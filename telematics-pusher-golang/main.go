@@ -39,7 +39,7 @@ func main() {
 
 	// one instacne of the wg 
 	var wg sync.WaitGroup
-	totalCars := 5000
+	totalCars := 50
 
 	for i := 1; i <= totalCars; i++ {
 		

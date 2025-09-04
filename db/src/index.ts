@@ -16,4 +16,4 @@ import { SubsciptionManager } from "./SubscriptionManager";
 
 const subscriptionManager = SubsciptionManager.getInstance()
 
-subscriptionManager.subscribe("5", "CAR-102")
+subscriptionManager.readFromTheStream("db-service-group-2", "db-consumer-2", "telematics_stream")
