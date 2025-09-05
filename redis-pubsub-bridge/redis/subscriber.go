@@ -1,10 +1,10 @@
 package redis
 
 import (
-    "context"
-    "log"
+	"context"
+	"log"
 
-    "github.com/redis/go-redis/v9"
+	"github.com/redis/go-redis/v9"
 )
 
 func PatternSubscribeAndForward(ctx context.Context, rdb *redis.Client, channelPattern, stream string) {
@@ -19,6 +19,7 @@ func PatternSubscribeAndForward(ctx context.Context, rdb *redis.Client, channelP
             return
         case msg := <-ch:
             // Each msg.Channel is the car channel
+            // fmt.Println(msg.Channel, msg.Payload)
             data := map[string]interface{}{
                 "car_channel": msg.Channel,
                 "payload":     msg.Payload,

@@ -8,6 +8,7 @@ import (
 func PushToStream(ctx context.Context, rdb *redis.Client, stream string, data map[string]interface{}) error {
     return rdb.XAdd(ctx, &redis.XAddArgs{
         Stream: stream,
+        MaxLen: 1_000_000,
         Values: data,
     }).Err()
 }
