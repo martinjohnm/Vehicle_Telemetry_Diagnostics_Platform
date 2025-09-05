@@ -11,7 +11,7 @@ export class UserManager {
 
     
     private constructor() {
-
+        SubsciptionManager.getInstance()
     }
 
     public static getInstance() {

@@ -3,6 +3,7 @@ package manager
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -69,6 +70,7 @@ func (cm *CarManager) LoadFromJSON(filename string) error {
             Speed:      car.Speed,
             Latitude:   car.Latitude,
             Longitude:  car.Longitude,
+			FuelLevel: rand.Float64() * 100,
 			City: car.City,
 			Direction: 0,
         }
@@ -124,7 +126,7 @@ func (m *CarManager) SimulateAndPushWithContext(ctx context.Context, carID strin
 				Latitude:  carInit.Latitude,
 				Longitude: carInit.Longitude,
 				Direction: carInit.Direction,
-				FuelLevel: rand.Float64() * 100,
+				FuelLevel: carInit.FuelLevel,
 				Timestamp: time.Now().Unix(),
 				City: carInit.City,
 			}
@@ -139,11 +141,61 @@ func (m *CarManager) SimulateAndPushWithContext(ctx context.Context, carID strin
 			
 			
 
-			if err := m.PushTelemetryPerCar(car); err != nil {
-				log.Println("Error pushing telemetry:", err)
-			}
+			// if err := m.PushTelemetryPerCar(car); err != nil {
+			// 	log.Println("Error pushing telemetry:", err)
+			// }
 
 			
 		}
 	}
+}
+
+
+
+func (m *CarManager) UpdateTelematics(carID string) {
+
+	carInit := m.Telemetry[carID]
+	car := model.CarTelemetry{
+		Type:      "CAR",	
+		ID:        carID,
+		Speed:     carInit.Speed,
+		Latitude:  carInit.Latitude,
+		Longitude: carInit.Longitude,
+		Direction: carInit.Direction,
+		FuelLevel: carInit.FuelLevel,
+		Timestamp: time.Now().Unix(),
+		City: carInit.City,
+	}
+
+	newcar:= model.MoveCar(car, 1.0)
+	finalcar := model.UpdateSpeedAndDirection(newcar)
+
+	m.Telemetry[carID].Speed = finalcar.Speed
+	m.Telemetry[carID].Latitude = finalcar.Latitude
+	m.Telemetry[carID].Longitude = finalcar.Longitude
+	m.Telemetry[carID].Direction = finalcar.Direction
+	m.Telemetry[carID].Timestamp = finalcar.Timestamp
+	m.Telemetry[carID].ID = finalcar.ID
+	m.Telemetry[carID].Type = finalcar.Type
+	m.Telemetry[carID].FuelLevel = finalcar.FuelLevel
+	m.Telemetry[carID].Status = finalcar.Status
+	}
+
+
+func (m *CarManager) PushAllTelemetry() error {
+	data, err := json.Marshal(m.Telemetry)
+	fmt.Println(m.Telemetry["CAR-5000"])
+	if err != nil {
+		return err
+	}
+
+	channel := "cars:data"
+	err = m.client.Publish(m.ctx, channel, string(data)).Err()
+	if err != nil {
+		// log.Printf("Failed to publish telemetry for %s: %v\n", car.ID, err)
+		return err
+	}
+
+	// log.Printf("Published telemetry for %s on channel %s\n", car.ID, channel)
+	return nil
 }

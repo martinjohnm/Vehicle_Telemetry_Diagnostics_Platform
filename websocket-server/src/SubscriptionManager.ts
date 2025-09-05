@@ -24,6 +24,11 @@ export class SubsciptionManager {
 
         return this.instance
     }
+
+    public getAllCarDataForAnalytics() {
+        
+        return []
+    }
     
 
     public subscribe(userId : string, subscription : string) {

@@ -2,6 +2,6 @@
 
 export const LandingPage = () => {
     return <div>
-        landing
+        Telematics dashboard
     </div>
 }
