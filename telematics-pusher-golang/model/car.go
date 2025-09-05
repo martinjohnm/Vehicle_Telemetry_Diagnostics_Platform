@@ -76,5 +76,15 @@ func UpdateSpeedAndDirection(c CarTelemetry) CarTelemetry {
 	} else {
 		c.Status = "moving"
 	}
+
+
+	// fuel level 
+	if c.FuelLevel < 5{
+		c.FuelLevel = 100
+	} else {
+		c.FuelLevel -= 0.4 
+	}
+
+
 	return c
 }

@@ -3,6 +3,7 @@ package manager
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -69,6 +70,7 @@ func (cm *CarManager) LoadFromJSON(filename string) error {
             Speed:      car.Speed,
             Latitude:   car.Latitude,
             Longitude:  car.Longitude,
+			FuelLevel: rand.Float64() * 100,
 			City: car.City,
 			Direction: 0,
         }
@@ -124,7 +126,7 @@ func (m *CarManager) SimulateAndPushWithContext(ctx context.Context, carID strin
 				Latitude:  carInit.Latitude,
 				Longitude: carInit.Longitude,
 				Direction: carInit.Direction,
-				FuelLevel: rand.Float64() * 100,
+				FuelLevel: carInit.FuelLevel,
 				Timestamp: time.Now().Unix(),
 				City: carInit.City,
 			}
@@ -160,7 +162,7 @@ func (m *CarManager) UpdateTelematics(carID string) {
 		Latitude:  carInit.Latitude,
 		Longitude: carInit.Longitude,
 		Direction: carInit.Direction,
-		FuelLevel: rand.Float64() * 100,
+		FuelLevel: carInit.FuelLevel,
 		Timestamp: time.Now().Unix(),
 		City: carInit.City,
 	}
@@ -172,12 +174,17 @@ func (m *CarManager) UpdateTelematics(carID string) {
 	m.Telemetry[carID].Latitude = finalcar.Latitude
 	m.Telemetry[carID].Longitude = finalcar.Longitude
 	m.Telemetry[carID].Direction = finalcar.Direction
-
+	m.Telemetry[carID].Timestamp = finalcar.Timestamp
+	m.Telemetry[carID].ID = finalcar.ID
+	m.Telemetry[carID].Type = finalcar.Type
+	m.Telemetry[carID].FuelLevel = finalcar.FuelLevel
+	m.Telemetry[carID].Status = finalcar.Status
 	}
 
 
 func (m *CarManager) PushAllTelemetry() error {
 	data, err := json.Marshal(m.Telemetry)
+	fmt.Println(m.Telemetry["CAR-5000"])
 	if err != nil {
 		return err
 	}
