@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -39,15 +40,33 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 	}
 
 
-	// Add retention policy for 1 hour 10 minutes (70 minutes)
-	_, err = db.Exec(ctx, `
-		SELECT add_retention_policy('car_data', INTERVAL '70 minutes', if_not_exists => TRUE);
-	`)
-	
-	if err != nil {
-		log.Fatal("❌ Retention policy error:", err)
-	}
+	// Start cleanup worker (keep only last 70 minutes of data)
+	startCleanupWorker(ctx, db)
 
+	log.Println("✅ Timescale hypertable ready with manual 70m retention")
+}
 
+	func startCleanupWorker(ctx context.Context, db *pgxpool.Pool) {
+		ticker := time.NewTicker(10 * time.Minute) // run every 1 minute
+		go func() {
+			for {
+				select {
+				case <-ticker.C:
+					_, err := db.Exec(ctx, `
+						DELETE FROM car_data
+						WHERE timestamp < NOW() - INTERVAL '70 minutes'
+					`)
+					if err != nil {
+						log.Println("❌ Cleanup error:", err)
+					} else {
+						log.Println("🧹 Old data cleaned (>70m)")
+					}
+				case <-ctx.Done():
+					log.Println("🛑 Cleanup worker stopped")
+					ticker.Stop()
+					return
+				}
+			}
+		}()
 	log.Println("✅ Timescale hypertable ready")
 }
