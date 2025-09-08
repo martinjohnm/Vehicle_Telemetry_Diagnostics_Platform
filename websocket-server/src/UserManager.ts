@@ -28,8 +28,6 @@ export class UserManager {
         this.users.set(id, user)
         this.registerOnClose(ws, id)
 
-        console.log(this.users);
-        
 
     }
 

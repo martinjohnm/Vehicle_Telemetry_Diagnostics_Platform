@@ -2,8 +2,10 @@ import { WebSocket } from "ws";
 import { Car } from "./Car";
 import { SubsciptionManager } from "./SubscriptionManager"
 import { createClient, RedisClientType } from "redis";
+import { PriorityQueue } from "@datastructures-js/priority-queue";
+import { UserManager } from "./UserManager";
 
-interface CarData {
+export interface CarData {
   type: string;
   id: string;
   city: string;
@@ -25,6 +27,7 @@ export class CarManager {
         this.redisClient = createClient();
         this.redisClient.connect();
         this.subscribe("cars:data")
+        
     }
 
     public static getInstance() {
@@ -58,7 +61,35 @@ export class CarManager {
             };
             this.cars.set(key, carData)
         }
-        console.log(this.cars.get("CAR-5000"));
+        this.processCarData()
+
+    
+        console.log(SubsciptionManager.getInstance().reverseSubscriptions);
+        
+
+        for (const [carChannel, users] of SubsciptionManager.getInstance().reverseSubscriptions) {
+            
+            if (typeof(this.cars.get(carChannel)) != undefined) {
+                //@ts-ignore
+                users?.forEach(s => UserManager.getInstance().getUser(s)?.emit(this.cars.get(carChannel)))
+            }
+
+            
+        }
+    }
+
+    private processCarData() {
+  
+        const top10 = this.getTop10Cars()
+        const speedArr = top10.map(([_, data]) => data.speed)
+        console.log(speedArr, top10[0]);
+        
+    }
+
+    private getTop10Cars() {
+        return [...this.cars.entries()]
+    .sort((a, b) => b[1].speed - a[1].speed) // sort descending by speed
+    .slice(0, 10)
     }
 
 }

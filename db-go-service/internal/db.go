@@ -37,5 +37,17 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 	if err != nil {
 		log.Fatal("❌ Create hypertable error:", err)
 	}
+
+
+	// Add retention policy for 1 hour 10 minutes (70 minutes)
+	_, err = db.Exec(ctx, `
+		SELECT add_retention_policy('car_data', INTERVAL '70 minutes', if_not_exists => TRUE);
+	`)
+	
+	if err != nil {
+		log.Fatal("❌ Retention policy error:", err)
+	}
+
+
 	log.Println("✅ Timescale hypertable ready")
 }

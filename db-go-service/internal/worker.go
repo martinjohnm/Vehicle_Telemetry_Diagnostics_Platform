@@ -2,9 +2,9 @@ package internal
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"time"
 
@@ -22,6 +22,8 @@ func StartWorker(ctx context.Context, rdb *rds.Client, db *pgxpool.Pool, streamK
 			Block:    5 * 1e9, // 5s
 		}).Result()
 
+
+	
 		if err != nil && err != rds.Nil {
 			log.Println("⚠️ XReadGroup error:", err)
 			continue
@@ -31,40 +33,32 @@ func StartWorker(ctx context.Context, rdb *rds.Client, db *pgxpool.Pool, streamK
 			continue
 		}
 
+		
 		var ids []string
 		var args []interface{}
 		var placeholders []string
 
 		i := 0
 		for _, stream := range res {
+			
 			for _, msg := range stream.Messages {
 
-				// val := msg.Values["payload"]
-				// fmt.Println(val)
-
-				if detailsStr, ok := msg.Values["payload"].(string); ok {
-					var details map[string]interface{}
-					if err := json.Unmarshal([]byte(detailsStr), &details); err != nil {
-						log.Fatal("Error decoding details:", err)
-					}
-
-					// fmt.Println(details)
-					// unixTs := int64(details["timestamp"])             // your value
-					// t := time.Unix(unixTs, 0).UTC()         // convert to time.Time in UTC
-
-					tsFloat, ok := details["timestamp"].(float64)
-					if !ok {
-						log.Fatal("timestamp is not a float64")
-					}
-
-					t := time.Unix(int64(tsFloat), 0).UTC()
-
-
-					args = append(args, details["id"],details["speed"],details["latitude"], details["longitude"],details["direction"], t)
-					// Now you can access inner fields
-					// fmt.Println("Speed:", details["speed"])
-					// fmt.Println("Location:", details["location"])
+				tsStr, ok := msg.Values["timestamp"].(string)
+				if !ok {
+					log.Fatal("timestamp is not a string")
 				}
+
+				// Convert string → int64
+				tsInt, err := strconv.ParseInt(tsStr, 10, 64)
+				if err != nil {
+					log.Fatal("error parsing timestamp:", err)
+				}
+
+				// Convert to time.Time
+				t := time.Unix(tsInt, 0).UTC()
+
+				args = append(args, msg.Values["id"],msg.Values["speed"],msg.Values["latitude"], msg.Values["longitude"],msg.Values["direction"],t)
+			
 				ids = append(ids, msg.ID)
 			
 				placeholders = append(placeholders,
@@ -72,6 +66,7 @@ func StartWorker(ctx context.Context, rdb *rds.Client, db *pgxpool.Pool, streamK
 				
 				i++
 			}
+		
 		}
 
 

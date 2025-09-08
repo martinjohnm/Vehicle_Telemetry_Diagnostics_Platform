@@ -11,6 +11,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@datastructures-js/priority-queue": "^6.3.4",
     "@types/express": "^5.0.3",
     "@types/redis": "^4.0.10",
     "@types/ws": "^8.18.1",
