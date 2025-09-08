@@ -68,5 +68,6 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 				}
 			}
 		}()
+		
 	log.Println("✅ Timescale hypertable ready")
 }
