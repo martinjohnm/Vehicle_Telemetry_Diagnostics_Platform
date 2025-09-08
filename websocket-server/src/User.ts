@@ -2,6 +2,7 @@ import { WebSocket } from "ws";
 import { SubsciptionManager } from "./SubscriptionManager";
 import { IncomingMessage, SUBSCRIBE, UNSUBSCRIBE } from "./types/in";
 import { OutgoingMessage } from "./types/out";
+import { CarData } from "./CarManager";
 
 
 
@@ -16,15 +17,14 @@ export class User {
         this.addListeners()
     }
 
-    emit (message : OutgoingMessage) {
+    emit (message : CarData) {
         this.ws.send(JSON.stringify(message))
     }
 
     private addListeners() {
         this.ws.on("message", (message: string) => {
             const parsedMessage : IncomingMessage = JSON.parse(message)
-            console.log(parsedMessage, 'hai');
-            
+           
             if (parsedMessage.method === SUBSCRIBE) {
                 parsedMessage.params.forEach(s => SubsciptionManager.getInstance().subscribe(this.id, s))
 

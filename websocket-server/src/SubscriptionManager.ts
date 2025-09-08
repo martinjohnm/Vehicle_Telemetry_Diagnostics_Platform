@@ -8,7 +8,7 @@ export class SubsciptionManager {
 
     public static instance : SubsciptionManager;
     private subscriptions : Map<string, string[]> = new Map();
-    private reverseSubscriptions : Map<string, string[]> = new Map();
+    public reverseSubscriptions : Map<string, string[]> = new Map();
     public redisClient : RedisClientType
 
 
@@ -39,15 +39,15 @@ export class SubsciptionManager {
         this.subscriptions.set(userId, (this.subscriptions.get(userId) || []).concat(subscription));
         this.reverseSubscriptions.set(subscription, (this.reverseSubscriptions.get(subscription) || []).concat(userId))
 
-        if (this.reverseSubscriptions.get(subscription)?.length === 1) {
-            this.redisClient.subscribe(subscription, this.redisCallBackHandler)
-        }
+        // if (this.reverseSubscriptions.get(subscription)?.length === 1) {
+        //     this.redisClient.subscribe(subscription, this.redisCallBackHandler)
+        // }
     }
 
-    private redisCallBackHandler = (message : string, channel : string) => {
-        const parsedMessage = JSON.parse(message);
-        this.reverseSubscriptions.get(channel)?.forEach(s => UserManager.getInstance().getUser(s)?.emit(parsedMessage))
-    }
+    // private redisCallBackHandler = (message : string, channel : string) => {
+    //     const parsedMessage = JSON.parse(message);
+    //     this.reverseSubscriptions.get(channel)?.forEach(s => UserManager.getInstance().getUser(s)?.emit(parsedMessage))
+    // }
 
     public unsubscribe(userId : string, subscription : string) {
         const existingSubscriptions = this.subscriptions.get(userId)
@@ -64,7 +64,7 @@ export class SubsciptionManager {
 
             if (this.reverseSubscriptions.get(subscription)?.length === 0) {
                 this.reverseSubscriptions.delete(subscription);
-                this.redisClient.unsubscribe(subscription)
+                // this.redisClient.unsubscribe(subscription)
             }
         }
     }

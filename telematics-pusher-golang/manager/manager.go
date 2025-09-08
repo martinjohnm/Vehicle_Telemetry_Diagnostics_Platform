@@ -184,7 +184,6 @@ func (m *CarManager) UpdateTelematics(carID string) {
 
 func (m *CarManager) PushAllTelemetry() error {
 	data, err := json.Marshal(m.Telemetry)
-	fmt.Println(m.Telemetry["CAR-5000"])
 	if err != nil {
 		return err
 	}
@@ -192,7 +191,8 @@ func (m *CarManager) PushAllTelemetry() error {
 	channel := "cars:data"
 	err = m.client.Publish(m.ctx, channel, string(data)).Err()
 	if err != nil {
-		// log.Printf("Failed to publish telemetry for %s: %v\n", car.ID, err)
+
+		fmt.Println("Failed to publish telemetry for", err)
 		return err
 	}
 

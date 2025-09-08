@@ -48,13 +48,13 @@ func MoveCar(c CarTelemetry, tickSeconds float64) CarTelemetry {
 
 func UpdateSpeedAndDirection(c CarTelemetry) CarTelemetry {
 	// Randomly adjust speed +/- 10 km/h, keep between 0 and 120 km/h
-	c.Speed += (rand.Float64()*20-10)
+	c.Speed += float64(randomSpeedChange())
 
 	if c.Speed <0{
 		c.Speed = 0
 	} 
-	if c.Speed > 120 {
-		c.Speed = 120
+	if c.Speed >= 120 {
+		c.Speed += float64(randomSpeedChange())
 	}
 
 	// Randomlly adjust direction +/- 15 degrees, keep within 0-360
@@ -87,4 +87,24 @@ func UpdateSpeedAndDirection(c CarTelemetry) CarTelemetry {
 
 
 	return c
+}
+
+// randomSpeedChange returns a random change in speed
+func randomSpeedChange() int {
+	// 80% chance small change, 20% chance big change
+	if rand.Intn(100) < 80 {
+		// ±1–2 km/h
+		return randSign() * (1 + rand.Intn(2))
+	} else {
+		// ±5–7 km/h
+		return randSign() * (5 + rand.Intn(3))
+	}
+}
+
+// randSign returns +1 or -1 randomly
+func randSign() int {
+	if rand.Intn(2) == 0 {
+		return -1
+	}
+	return 1
 }
