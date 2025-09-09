@@ -92,7 +92,7 @@ export class SubsciptionManager {
         
 
         if (existingAnalytics) {
-            this.analyticsSubscriptions.set(userId, existingAnalytics.filter(s => s != userId))
+            this.analyticsSubscriptions.set(userId, existingAnalytics.filter(s => s != subscription))
         }
 
      
@@ -111,6 +111,7 @@ export class SubsciptionManager {
     public userLeft(userId : string) {
         console.log("user left " + userId);
         this.subscriptions.get(userId)?.forEach(s => this.unsubscribe(userId, s))
+        this.analyticsSubscriptions.get(userId)?.forEach(s => this.unSubscribeAnalytics(userId, s))
     }
 
     getSubscriptions(userId : string) {
