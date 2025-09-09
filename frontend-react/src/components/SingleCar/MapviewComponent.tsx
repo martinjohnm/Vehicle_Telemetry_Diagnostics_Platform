@@ -65,7 +65,7 @@ const position: [number, number] = [50.8295, 12.9150];
 
       return () => {
         SignalingManager.getInstance().sendMessage({"method" : "UNSUBSCRIBE", "params" : [car]})
-        SignalingManager.getInstance().deregisterCallBack("car", `CAR-${car}`)
+        SignalingManager.getInstance().deregisterCallBack("CAR", `CAR-${car}`)
       }
 
     }

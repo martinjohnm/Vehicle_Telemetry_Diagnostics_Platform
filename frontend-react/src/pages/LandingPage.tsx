@@ -1,52 +1,75 @@
 import { useEffect, useState } from "react"
 import { SignalingManager } from "../utils/SignalingManager"
-import type { IncomingMessage } from "../types/in"
-import type { AnalyticsTypes } from "../types/out"
+// import type { AnalyticsTypes } from "../types/out"
 
+
+
+export interface CarData {
+  type: string;
+  id: string;
+  city: string;
+  speed: number;
+  latitude: number;
+  longitude: number;
+  fuel_level: number;
+  direction: number;
+  status: string;
+  timestamp: number;
+}
 
 export const LandingPage = () => {
 
 
 
-    const [analytics, setAnalytics] = useState<AnalyticsTypes[]>(["top_ten_car_by_speed"])
+    // const [analytics, setAnalytics] = useState<AnalyticsTypes[]>(["top_ten_car_by_speed"])
 
+
+    const [data_from_ws, setData] = useState<[string, CarData][]>([])
 
 
       useEffect(() => {
 
 
-        setAnalytics(["top_ten_car_by_speed"])
+        // setAnalytics(["top_ten_car_by_speed"])
 
 
         const init = async () => {
     
-          SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE_ANALYTICS", "params" : analytics})
+          SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE_ANALYTICS", "params" : ["top_ten_car_by_speed"]})
     
-          SignalingManager.getInstance().registerCallBack("ANALYTICS", (data: IncomingMessage) => {
+          SignalingManager.getInstance().registerCallBack("ANALYTICS", (data: any) => {
           
-            console.log(data);
-            
-            
+            setData(data.top_ten_cars as [string, CarData][])
+        
           }, `ANALYTICS-TOP_TEN_CARS`)
     
           return () => {
-            SignalingManager.getInstance().sendMessage({"method" : "UNSUBSCRIBE_ANALYTICS", "params" : analytics})
+            SignalingManager.getInstance().sendMessage({"method" : "UNSUBSCRIBE_ANALYTICS", "params" : ["top_ten_car_by_speed"]})
             SignalingManager.getInstance().deregisterCallBack("ANALYTICS", `ANALYTICS-TOP_TEN_CARS`)
           }
     
         }
     
         init()
-      }, [analytics])
+      }, [data_from_ws])
     
+
+      console.log(data_from_ws);
+      
     
     return <div className="p-2">
         <div className="w-full bg-slate-100 rounded-2xl flex items-center">
             <p className="text-4xl p-2">Telematics dashboard</p>
         </div>
         <div className="grid grid-cols-3 py-0.5 gap-0.5">
-            <div className="col-span-2 p-2 h-96 bg-red-300">
-                
+            <div className="col-span-2 p-2 bg-red-300">
+                {data_from_ws.map(car => (
+                  <div className="flex gap-0.5">
+                    <div className="min-w-32 bg-slate-200 p-2 flex items-center">{car[1].city}</div>
+                    <div className="min-w-32 bg-amber-200 p-2 flex items-center ">{car[1].speed}</div>
+                    <div className="min-w-48 bg-blue-400 p-2 flex items-center ">{car[1].fuel_level}</div>
+                  </div>
+                ))}
             </div>
             <div className="col-span-1 bg-green-300">
 
