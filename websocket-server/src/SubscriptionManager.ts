@@ -7,10 +7,14 @@ import { UserManager } from "./UserManager";
 export class SubsciptionManager {
 
     public static instance : SubsciptionManager;
+
     private subscriptions : Map<string, string[]> = new Map();
     public reverseSubscriptions : Map<string, string[]> = new Map();
+
     public redisClient : RedisClientType
 
+    public analyticsSubscriptions : Map<string, string[]> = new Map();
+    public analyticsReverseSubscriptions : Map<string, string[]> = new Map();
 
     private constructor() {
         this.redisClient = createClient();
@@ -69,9 +73,48 @@ export class SubsciptionManager {
         }
     }
 
+
+    public subscribeAnalytics(userId : string, subscription : string) {
+        if (this.analyticsSubscriptions.get(userId)?.includes(subscription)) {
+            return
+        }
+
+        this.analyticsSubscriptions.set(userId, (this.analyticsSubscriptions.get(userId) || []).concat(subscription))
+        this.analyticsReverseSubscriptions.set(subscription, (this.analyticsReverseSubscriptions.get(subscription) || []).concat(userId))
+
+    }
+
+    public unSubscribeAnalytics(userId : string, subscription : string) {
+
+        const existingAnalytics = this.analyticsSubscriptions.get(userId)
+
+        console.log(existingAnalytics);
+        
+
+        if (existingAnalytics) {
+            this.analyticsSubscriptions.set(userId, existingAnalytics.filter(s => s != subscription))
+            if (this.analyticsSubscriptions.get(userId)?.length === 0) {
+                this.analyticsSubscriptions.delete(userId)
+            }
+        }
+
+     
+        const reverseExistingAnalyticsSubscriptions = this.analyticsReverseSubscriptions.get(subscription)
+
+        if (reverseExistingAnalyticsSubscriptions) {
+            this.analyticsReverseSubscriptions.set(subscription, reverseExistingAnalyticsSubscriptions.filter(s => s!== userId))
+
+            if (this.analyticsReverseSubscriptions.get(subscription)?.length === 0) {
+                this.analyticsReverseSubscriptions.delete(subscription);
+                // this.redisClient.unsubscribe(subscription)
+            }
+        }
+    }
+
     public userLeft(userId : string) {
         console.log("user left " + userId);
         this.subscriptions.get(userId)?.forEach(s => this.unsubscribe(userId, s))
+        this.analyticsSubscriptions.get(userId)?.forEach(s => this.unSubscribeAnalytics(userId, s))
     }
 
     getSubscriptions(userId : string) {
