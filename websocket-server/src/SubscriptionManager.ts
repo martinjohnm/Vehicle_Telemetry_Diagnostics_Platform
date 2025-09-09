@@ -93,6 +93,9 @@ export class SubsciptionManager {
 
         if (existingAnalytics) {
             this.analyticsSubscriptions.set(userId, existingAnalytics.filter(s => s != subscription))
+            if (this.analyticsSubscriptions.get(userId)?.length === 0) {
+                this.analyticsSubscriptions.delete(userId)
+            }
         }
 
      
