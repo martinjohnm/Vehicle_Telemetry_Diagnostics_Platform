@@ -48,9 +48,15 @@ export class SignalingManager {
             
             const type = message.type
 
+            
+
             if (this.callBacks.has(type)) {
                 this.callBacks.get(type)?.forEach(({callback} : {callback: any}) => {
                     if (type == "CAR") {
+                        callback(message)
+                    }
+
+                    if (type == "ANALYTICS") {
                         callback(message)
                     }
                 })

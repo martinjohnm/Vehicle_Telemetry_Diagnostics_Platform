@@ -2,7 +2,7 @@ import { WebSocket } from "ws";
 import { SubsciptionManager } from "./SubscriptionManager";
 import { IncomingMessage, SUBSCRIBE, SUBSCRIBE_ANALYTICS, UNSUBSCRIBE, UNSUBSCRIBE_ANALYTICS } from "./types/in";
 import { OutgoingMessage } from "./types/out";
-import { CarData } from "./CarManager";
+import { AnalyticsData, CarData } from "./CarManager";
 
 
 
@@ -18,6 +18,10 @@ export class User {
     }
 
     emit (message : CarData) {
+        this.ws.send(JSON.stringify(message))
+    }
+
+    emit_analytics(message: AnalyticsData) {
         this.ws.send(JSON.stringify(message))
     }
 

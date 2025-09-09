@@ -18,6 +18,12 @@ export interface CarData {
   timestamp: number;
 }
 
+
+export interface AnalyticsData {
+    type : string, 
+    top_ten_cars : [string, CarData][]
+}
+
 export class CarManager {
     private static instance : CarManager;
     private cars : Map<string, CarData> = new Map()
@@ -77,9 +83,19 @@ export class CarManager {
         }
 
         
-
-        console.log(SubsciptionManager.getInstance().analyticsSubscriptions);
         
+        for (const [analyticsChannel, users] of SubsciptionManager.getInstance().analyticsReverseSubscriptions) {
+            
+            if (typeof(this.cars.get(analyticsChannel)) != undefined) {
+                //@ts-ignore
+                users?.forEach(s => UserManager.getInstance().getUser(s)?.emit_analytics({type : "ANALYTICS", 
+                    top_ten_cars : this.topTenCarsBySpeed}))
+            }
+
+            
+        }
+
+    
     }
 
     private processCarData() {
