@@ -22,6 +22,7 @@ export class CarManager {
     private static instance : CarManager;
     private cars : Map<string, CarData> = new Map()
     public redisClient : RedisClientType
+    private topTenCarsBySpeed : [string, CarData][] = []
 
     private constructor() {
         this.redisClient = createClient();
@@ -64,8 +65,6 @@ export class CarManager {
         this.processCarData()
 
     
-        console.log(SubsciptionManager.getInstance().reverseSubscriptions);
-        
 
         for (const [carChannel, users] of SubsciptionManager.getInstance().reverseSubscriptions) {
             
@@ -76,17 +75,22 @@ export class CarManager {
 
             
         }
+
+        
+
+        console.log(SubsciptionManager.getInstance().analyticsSubscriptions);
+        
     }
 
     private processCarData() {
   
-        const top10 = this.getTop10Cars()
-        const speedArr = top10.map(([_, data]) => data.speed)
-        console.log(speedArr, top10[0]);
+        
+        this.topTenCarsBySpeed = this.filterTopTenCarBySpeed()
+        // console.log(this.topTenCarsBySpeed);
         
     }
 
-    private getTop10Cars() {
+    private filterTopTenCarBySpeed() {
         return [...this.cars.entries()]
     .sort((a, b) => b[1].speed - a[1].speed) // sort descending by speed
     .slice(0, 10)

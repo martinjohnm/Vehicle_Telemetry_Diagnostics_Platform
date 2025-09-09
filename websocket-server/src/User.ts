@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
 import { SubsciptionManager } from "./SubscriptionManager";
-import { IncomingMessage, SUBSCRIBE, UNSUBSCRIBE } from "./types/in";
+import { IncomingMessage, SUBSCRIBE, SUBSCRIBE_ANALYTICS, UNSUBSCRIBE, UNSUBSCRIBE_ANALYTICS } from "./types/in";
 import { OutgoingMessage } from "./types/out";
 import { CarData } from "./CarManager";
 
@@ -32,6 +32,13 @@ export class User {
 
             if (parsedMessage.method === UNSUBSCRIBE) {
                 parsedMessage.params.forEach(s => SubsciptionManager.getInstance().unsubscribe(this.id, s))
+            }
+            
+            if (parsedMessage.method === SUBSCRIBE_ANALYTICS) {
+                parsedMessage.params.forEach(s => SubsciptionManager.getInstance().subscribeAnalytics(this.id, s))
+            }
+            if (parsedMessage.method === UNSUBSCRIBE_ANALYTICS) {
+                parsedMessage.params.forEach(s => SubsciptionManager.getInstance().unSubscribeAnalytics(this.id, s))
             }
         })
     }
