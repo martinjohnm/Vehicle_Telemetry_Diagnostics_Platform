@@ -22,6 +22,8 @@ export interface CarData {
 export interface AnalyticsData {
     type : string, 
     top_ten_cars : [string, CarData][]
+    top_ten_speed : []
+    top_ten_fuel : []
 }
 
 export class CarManager {
@@ -29,6 +31,7 @@ export class CarManager {
     private cars : Map<string, CarData> = new Map()
     public redisClient : RedisClientType
     private topTenCarsBySpeed : [string, CarData][] = []
+    private topCarByFuelHeap : string[] = []
 
     private constructor() {
         this.redisClient = createClient();
