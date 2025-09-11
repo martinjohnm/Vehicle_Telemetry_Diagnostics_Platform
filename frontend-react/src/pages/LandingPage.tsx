@@ -65,9 +65,13 @@ export const LandingPage = () => {
             <div className="col-span-2 p-2 bg-red-300">
                 {data_from_ws.map(car => (
                   <div className="flex gap-0.5">
+                    <div className="min-w-32 bg-slate-200 p-2 flex items-center">{car[1].id}</div>
                     <div className="min-w-32 bg-slate-200 p-2 flex items-center">{car[1].city}</div>
                     <div className="min-w-32 bg-amber-200 p-2 flex items-center ">{car[1].speed}</div>
                     <div className="min-w-48 bg-blue-400 p-2 flex items-center ">{car[1].fuel_level}</div>
+                    <div className="min-w-48 bg-blue-400 p-2 flex items-center ">{car[1].latitude}</div>
+                    <div className="min-w-48 bg-blue-400 p-2 flex items-center ">{car[1].longitude}</div>
+                    <div className="min-w-48 bg-blue-400 p-2 flex items-center ">{car[1].status}</div>
                   </div>
                 ))}
             </div>
