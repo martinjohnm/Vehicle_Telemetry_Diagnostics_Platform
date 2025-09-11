@@ -2,8 +2,8 @@ import { WebSocket } from "ws";
 import { Car } from "./Car";
 import { SubsciptionManager } from "./SubscriptionManager"
 import { createClient, RedisClientType } from "redis";
-import { PriorityQueue } from "@datastructures-js/priority-queue";
 import { UserManager } from "./UserManager";
+import { MaxPriorityQueue } from "./heap/MaxPriorityQueue";
 
 export interface CarData {
   type: string;
@@ -32,6 +32,8 @@ export class CarManager {
     public redisClient : RedisClientType
     private topTenCarsBySpeed : [string, CarData][] = []
     private topCarByFuelHeap : string[] = []
+
+    private speedPriorityQueue = new MaxPriorityQueue<CarData>()
 
     private constructor() {
         this.redisClient = createClient();
@@ -74,6 +76,8 @@ export class CarManager {
         this.processCarData()
 
     
+        console.log(this.speedPriorityQueue.dequeue());
+        
 
         for (const [carChannel, users] of SubsciptionManager.getInstance().reverseSubscriptions) {
             
@@ -105,8 +109,14 @@ export class CarManager {
   
         
         this.topTenCarsBySpeed = this.filterTopTenCarBySpeed()
-        // console.log(this.topTenCarsBySpeed);
+        this.createMaxPriorityQueueOfSpeed()
         
+    }
+
+    private createMaxPriorityQueueOfSpeed() {
+        for (const [key, car] of this.cars) {
+            this.speedPriorityQueue.enqueue(car, car.speed)
+        }
     }
 
     private filterTopTenCarBySpeed() {
