@@ -52,10 +52,14 @@ func UpdateSpeedAndDirection(c CarTelemetry) CarTelemetry {
 
 	if c.Speed <0{
 		c.Speed = 0
-	} 
-	if c.Speed >= 120 {
+	} else if c.Speed > 5 && c.Speed < 220 {
 		c.Speed += float64(randomSpeedChange())
+	} else if c.Speed >0 && c.Speed <=5 {
+		c.Speed += 1
+	} else  {
+		c.Speed -= float64((5 + rand.Intn(3)))
 	}
+
 
 	// Randomlly adjust direction +/- 15 degrees, keep within 0-360
 	c.Direction += (rand.Float64()*30-15)

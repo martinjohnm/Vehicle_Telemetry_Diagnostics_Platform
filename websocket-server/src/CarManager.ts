@@ -18,6 +18,8 @@ export interface CarData {
   timestamp: number;
 }
 
+type SpeedBin = { range: string; count: number };
+
 
 export interface AnalyticsData {
     type : string, 
@@ -31,15 +33,13 @@ export class CarManager {
     private cars : Map<string, CarData> = new Map()
     public redisClient : RedisClientType
     private topTenCarsBySpeed : [string, CarData][] = []
-    private topCarByFuelHeap : string[] = []
-
-    private speedPriorityQueue = new MaxPriorityQueue<CarData>()
+    private speedHistogram : SpeedBin[] = []
 
     private constructor() {
         this.redisClient = createClient();
         this.redisClient.connect();
         this.subscribe("cars:data")
-        
+        this.initBuckets(0,280,20)
     }
 
     public static getInstance() {
@@ -57,6 +57,8 @@ export class CarManager {
 
     private redisCallBackHandler = (message : string, channel : string) => {
         const parsedMessage = JSON.parse(message);
+
+        let kk = 0;
         for (const [key, value] of Object.entries(parsedMessage)) {
 
             const carData: CarData = {
@@ -72,12 +74,10 @@ export class CarManager {
                 timestamp: Number((value as any)["timestamp"]),
             };
             this.cars.set(key, carData)
+
+            
         }
         this.processCarData()
-
-    
-        console.log(this.speedPriorityQueue.dequeue());
-        
 
         for (const [carChannel, users] of SubsciptionManager.getInstance().reverseSubscriptions) {
             
@@ -107,22 +107,50 @@ export class CarManager {
 
     private processCarData() {
   
+        this.filterTopTenCarBySpeed()
+        this.createSpeedHistogram()
+        console.log(this.speedHistogram);
         
-        this.topTenCarsBySpeed = this.filterTopTenCarBySpeed()
-        this.createMaxPriorityQueueOfSpeed()
-        
+
     }
 
-    private createMaxPriorityQueueOfSpeed() {
-        for (const [key, car] of this.cars) {
-            this.speedPriorityQueue.enqueue(car, car.speed)
+    private initBuckets(start: number , end: number, binSize: number) {
+        for (let lower = start; lower <= end; lower += binSize) {
+            const upper = lower + binSize;
+            this.speedHistogram.push({
+                range : `${lower}-${upper}`,
+                count : 0
+            })
         }
     }
 
+    private addCarToBucket(speed : number) {
+        for (let i = 0; i < this.speedHistogram.length; i++) {
+            const [low, high] = this.speedHistogram[i].range.split("-").map(Number);
+
+            if (speed >= low && speed < high) {
+                this.speedHistogram[i].count++;
+                break; // stop once the right bucket is found
+            }
+            }
+        }
+
+    private createSpeedHistogram() {
+        
+        this.speedHistogram = []
+        this.initBuckets(0,280,20)
+  
+        for (const [carId, car] of this.cars.entries()) {
+            this.addCarToBucket(car.speed)
+        }
+
+    }
+
     private filterTopTenCarBySpeed() {
-        return [...this.cars.entries()]
+        this.topTenCarsBySpeed = [...this.cars.entries()]
     .sort((a, b) => b[1].speed - a[1].speed) // sort descending by speed
     .slice(0, 10)
+   
     }
 
 }
