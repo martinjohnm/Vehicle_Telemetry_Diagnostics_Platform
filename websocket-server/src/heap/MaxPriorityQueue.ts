@@ -26,6 +26,7 @@ export class MaxPriorityQueue<T> {
     }
 
     enqueue(value: T, priority : number) {
+      
         this.heap.push({value, priority})
         this.bubbleUp()
     }
@@ -42,7 +43,12 @@ export class MaxPriorityQueue<T> {
     }
 
     peek(): T | undefined {
-        return this.heap[0].value;
+        if (this.heap.length > 1) {
+            return this.heap[0].value;
+        } else {
+            return undefined
+        }
+        
     }
 
     size(): number {
