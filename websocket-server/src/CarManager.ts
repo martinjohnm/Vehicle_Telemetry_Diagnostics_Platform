@@ -24,8 +24,7 @@ type SpeedBin = { range: string; count: number };
 export interface AnalyticsData {
     type : string, 
     top_ten_cars : [string, CarData][]
-    top_ten_speed : []
-    top_ten_fuel : []
+    speed_histogram : SpeedBin[]
 }
 
 export class CarManager {
@@ -96,7 +95,8 @@ export class CarManager {
             if (typeof(this.cars.get(analyticsChannel)) != undefined) {
                 //@ts-ignore
                 users?.forEach(s => UserManager.getInstance().getUser(s)?.emit_analytics({type : "ANALYTICS", 
-                    top_ten_cars : this.topTenCarsBySpeed}))
+                    top_ten_cars : this.topTenCarsBySpeed,
+                    speed_histogram : this.speedHistogram}))
             }
 
             
