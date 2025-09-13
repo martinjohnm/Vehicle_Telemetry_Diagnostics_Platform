@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { SignalingManager } from "../utils/SignalingManager"
+import Histogram from "../components/Landing/Histogram";
 // import type { AnalyticsTypes } from "../types/out"
 
 
@@ -17,6 +18,10 @@ export interface CarData {
   timestamp: number;
 }
 
+
+type SpeedBin = { range: string; count: number };
+
+
 export const LandingPage = () => {
 
 
@@ -24,8 +29,8 @@ export const LandingPage = () => {
     // const [analytics, setAnalytics] = useState<AnalyticsTypes[]>(["top_ten_car_by_speed"])
 
 
-    const [data_from_ws, setData] = useState<[string, CarData][]>([])
-
+    const [top_ten_carsdata_from_ws, setTopTenCarsData] = useState<[string, CarData][]>([])
+    const [speed_histogram, setSpeedHistogram] = useState<SpeedBin[]>([])
 
       useEffect(() => {
 
@@ -39,7 +44,8 @@ export const LandingPage = () => {
     
           SignalingManager.getInstance().registerCallBack("ANALYTICS", (data: any) => {
           
-            setData(data.top_ten_cars as [string, CarData][])
+            setTopTenCarsData(data.top_ten_cars as [string, CarData][])
+            setSpeedHistogram(data.speed_histogram as SpeedBin[])
         
           }, `ANALYTICS-TOP_TEN_CARS`)
     
@@ -51,10 +57,10 @@ export const LandingPage = () => {
         }
     
         init()
-      }, [data_from_ws])
+      }, [top_ten_carsdata_from_ws])
     
 
-      console.log(data_from_ws);
+      console.log(top_ten_carsdata_from_ws);
       
     
     return <div className="p-2">
@@ -63,7 +69,7 @@ export const LandingPage = () => {
         </div>
         <div className="grid grid-cols-3 py-0.5 gap-0.5">
             <div className="col-span-2 p-2 bg-red-300">
-                {data_from_ws.map(car => (
+                {top_ten_carsdata_from_ws.map(car => (
                   <div className="flex gap-0.5">
                     <div className="min-w-32 bg-slate-200 p-2 flex items-center">{car[1].id}</div>
                     <div className="min-w-32 bg-slate-200 p-2 flex items-center">{car[1].city}</div>
@@ -76,7 +82,7 @@ export const LandingPage = () => {
                 ))}
             </div>
             <div className="col-span-1 bg-green-300">
-
+                <Histogram bins={speed_histogram} width={600} height={400}/>
             </div>
         </div>
         <div className="grid grid-cols-3 py-0.5 gap-0.5">
