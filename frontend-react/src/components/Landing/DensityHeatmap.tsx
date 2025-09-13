@@ -8,7 +8,7 @@ export function DensityHeatmap({ cells }: { cells: { lat: number; lng: number; c
 
   useEffect(() => {
     const points = cells.map(cell => [cell.lat, cell.lng, cell.count]); // last value = intensity
-    const heatLayer = L.heatLayer(points, { radius: 40 }).addTo(map);
+    const heatLayer = L.heatLayer(points, { radius: 25 }).addTo(map);
 
     return () => {
       map.removeLayer(heatLayer);

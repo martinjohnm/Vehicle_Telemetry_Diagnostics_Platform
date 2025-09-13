@@ -3,6 +3,7 @@ import { SignalingManager } from "../utils/SignalingManager"
 import Histogram from "../components/Landing/Histogram";
 import { DensityHeatmap } from "../components/Landing/DensityHeatmap";
 import { MapContainer, TileLayer } from "react-leaflet";
+import type { AnalyticsData } from "../types/car";
 // import type { AnalyticsTypes } from "../types/out"
 
 
@@ -44,7 +45,7 @@ export const LandingPage = () => {
     
           SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE_ANALYTICS", "params" : ["top_ten_car_by_speed"]})
     
-          SignalingManager.getInstance().registerCallBack("ANALYTICS", (data: any) => {
+          SignalingManager.getInstance().registerCallBack("ANALYTICS", (data: AnalyticsData) => {
           
             setTopTenCarsData(data.top_ten_cars as [string, CarData][])
             setSpeedHistogram(data.speed_histogram as SpeedBin[])
@@ -99,7 +100,7 @@ export const LandingPage = () => {
                           attribution='&copy; OpenStreetMap contributors'
                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                <DensityHeatmap cells={[{lat : 50.8282, lng : 12.9209, count : 1000},{lat : 50.8320, lng : 12.9233, count : 1000}]}/>
+                <DensityHeatmap cells={[{lat : 50.8282, lng : 12.9209, count : 100},{lat : 50.8320, lng : 12.9233, count : 100}]}/>
               </MapContainer>
             </div>
             <div className="col-span-2 p-2 h-96 bg-amber-400">

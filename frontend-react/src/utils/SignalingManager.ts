@@ -1,3 +1,4 @@
+import type { AnalyticsData, CarData } from "../types/car";
 import type { OutgoingMessage } from "../types/out";
 
 
@@ -53,11 +54,11 @@ export class SignalingManager {
             if (this.callBacks.has(type)) {
                 this.callBacks.get(type)?.forEach(({callback} : {callback: any}) => {
                     if (type == "CAR") {
-                        callback(message)
+                        callback(message as CarData)
                     }
 
                     if (type == "ANALYTICS") {
-                        callback(message)
+                        callback(message as AnalyticsData)
                     }
                 })
             }
