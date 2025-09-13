@@ -15,40 +15,54 @@ const Histogram: React.FC<HistogramProps> = ({ bins, width = 400, height = 250 }
   const barWidth = width / bins.length;
 
   return (
-    <svg width={width} height={height} style={{ border: "1px solid #ccc" }}>
-      {bins.map((bin, i) => {
-        const barHeight = (bin.count / maxCount) * (height - 20); // leave room for labels
+    <div
+      style={{
+        width,
+        height,
+        border: "1px solid #ccc",
+        display: "flex",
+        alignItems: "flex-end", // bars align to bottom
+        justifyContent: "space-between",
+        padding: "0 5px",
+      }}
+    >
+      {bins.map((bin) => {
+        const barHeight = (bin.count / maxCount) * (height - 20);
+
         return (
-          <g key={bin.range} transform={`translate(${i * barWidth}, ${height - barHeight})`}>
-            <rect
-              width={barWidth - 4}
-              height={barHeight}
-              fill="steelblue"
-              rx={4}
-            />
-            <text
-              x={barWidth / 2}
-              y={15}
-              textAnchor="middle"
-              fontSize="10"
-              fill="#333"
-              transform={`translate(0, ${barHeight})`}
-            >
-              {bin.range}
-            </text>
-            <text
-              x={barWidth / 2}
-              y={-4}
-              textAnchor="middle"
-              fontSize="10"
-              fill="#000"
-            >
+          <div
+            key={bin.range}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              width: barWidth - 4,
+            }}
+          >
+            {/* Count label */}
+            <div style={{ marginBottom: "4px", fontSize: "10px", color: "#000" }}>
               {bin.count}
-            </text>
-          </g>
+            </div>
+
+            {/* Bar */}
+            <div
+              style={{
+                width: "100%",
+                height: barHeight,
+                backgroundColor: "steelblue",
+                borderRadius: "4px 4px 0 0",
+              }}
+            ></div>
+
+            {/* Range label */}
+            <div style={{ marginTop: "4px", fontSize: "9px", color: "#333" }}>
+              {bin.range}
+            </div>
+          </div>
         );
       })}
-    </svg>
+    </div>
   );
 };
 
