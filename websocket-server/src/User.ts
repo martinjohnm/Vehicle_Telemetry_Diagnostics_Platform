@@ -2,7 +2,7 @@ import { WebSocket } from "ws";
 import { SubsciptionManager } from "./SubscriptionManager";
 import { IncomingMessage, SUBSCRIBE, SUBSCRIBE_ANALYTICS, UNSUBSCRIBE, UNSUBSCRIBE_ANALYTICS } from "./types/in";
 import { OutgoingMessage } from "./types/out";
-import { AnalyticsData, CarData } from "./CarManager";
+import { CarData, AnalyticsData } from "./types/car";
 
 
 

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { SignalingManager } from "../utils/SignalingManager"
 import Histogram from "../components/Landing/Histogram";
+import { DensityHeatmap } from "../components/Landing/DensityHeatmap";
+import { MapContainer, TileLayer } from "react-leaflet";
+import type { AnalyticsData } from "../types/car";
 // import type { AnalyticsTypes } from "../types/out"
 
 
@@ -27,7 +30,7 @@ export const LandingPage = () => {
 
 
     // const [analytics, setAnalytics] = useState<AnalyticsTypes[]>(["top_ten_car_by_speed"])
-
+    const position: [number, number] = [50.8295, 12.9150];
 
     const [top_ten_carsdata_from_ws, setTopTenCarsData] = useState<[string, CarData][]>([])
     const [speed_histogram, setSpeedHistogram] = useState<SpeedBin[]>([])
@@ -42,7 +45,7 @@ export const LandingPage = () => {
     
           SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE_ANALYTICS", "params" : ["top_ten_car_by_speed"]})
     
-          SignalingManager.getInstance().registerCallBack("ANALYTICS", (data: any) => {
+          SignalingManager.getInstance().registerCallBack("ANALYTICS", (data: AnalyticsData) => {
           
             setTopTenCarsData(data.top_ten_cars as [string, CarData][])
             setSpeedHistogram(data.speed_histogram as SpeedBin[])
@@ -81,13 +84,24 @@ export const LandingPage = () => {
                   </div>
                 ))}
             </div>
-            <div className="col-span-1 bg-green-300">
+            <div className="col-span-1 bg-slate-100">
                 <Histogram bins={speed_histogram} width={600} height={400}/>
             </div>
         </div>
         <div className="grid grid-cols-3 py-0.5 gap-0.5">
             <div className="col-span-1 bg-green-300">
-
+              <MapContainer
+              center={position}
+              zoom={14}
+              scrollWheelZoom={true}
+              style={{ height: '100%', width: '100%' }}
+              >
+                  <TileLayer
+                          attribution='&copy; OpenStreetMap contributors'
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                <DensityHeatmap cells={[{lat : 50.8282, lng : 12.9209, count : 100},{lat : 50.8320, lng : 12.9233, count : 100}]}/>
+              </MapContainer>
             </div>
             <div className="col-span-2 p-2 h-96 bg-amber-400">
                 
