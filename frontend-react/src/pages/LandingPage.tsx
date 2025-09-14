@@ -34,7 +34,11 @@ export const LandingPage = () => {
 
     const [top_ten_carsdata_from_ws, setTopTenCarsData] = useState<[string, CarData][]>([])
     const [speed_histogram, setSpeedHistogram] = useState<SpeedBin[]>([])
+    const [aggr_lat_lng_by_city, setAggLatLngByCity] = useState<{ key: string; val: [number, number]; }[]>([])
 
+   
+    console.log(aggr_lat_lng_by_city);
+    
       useEffect(() => {
 
 
@@ -49,6 +53,8 @@ export const LandingPage = () => {
           
             setTopTenCarsData(data.top_ten_cars as [string, CarData][])
             setSpeedHistogram(data.speed_histogram as SpeedBin[])
+            setAggLatLngByCity(data.car_aggr_lat_lng_city)
+          
         
           }, `ANALYTICS-TOP_TEN_CARS`)
     
@@ -61,10 +67,7 @@ export const LandingPage = () => {
     
         init()
       }, [top_ten_carsdata_from_ws])
-    
 
-      console.log(top_ten_carsdata_from_ws);
-      
     
     return <div className="p-2">
         <div className="w-full bg-slate-100 rounded-2xl flex items-center">
@@ -90,9 +93,12 @@ export const LandingPage = () => {
         </div>
         <div className="grid grid-cols-3 py-0.5 gap-0.5">
             <div className="col-span-1 bg-green-300">
-              <MapContainer
+              
+            </div>
+            <div className="col-span-2 p-2 h-96 bg-amber-400">
+                <MapContainer
               center={position}
-              zoom={14}
+              zoom={40}
               scrollWheelZoom={true}
               style={{ height: '100%', width: '100%' }}
               >
@@ -100,11 +106,8 @@ export const LandingPage = () => {
                           attribution='&copy; OpenStreetMap contributors'
                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                <DensityHeatmap cells={[{lat : 50.8282, lng : 12.9209, count : 100},{lat : 50.8320, lng : 12.9233, count : 100}]}/>
+                <DensityHeatmap cells={aggr_lat_lng_by_city}/>
               </MapContainer>
-            </div>
-            <div className="col-span-2 p-2 h-96 bg-amber-400">
-                
             </div>
         </div>
         <div className="grid grid-cols-3 py-0.5 gap-0.5">
