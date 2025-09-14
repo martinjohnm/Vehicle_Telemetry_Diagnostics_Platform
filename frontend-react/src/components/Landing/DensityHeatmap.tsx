@@ -3,11 +3,12 @@ import "leaflet.heat";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 
-export function DensityHeatmap({ cells }: { cells: { lat: number; lng: number; count: number }[] }) {
+export function DensityHeatmap({cells}: { cells :  { key: string; val: [number, number]; }[]}) {
   const map = useMap();
 
   useEffect(() => {
-    const points = cells.map(cell => [cell.lat, cell.lng, cell.count]); // last value = intensity
+    const points = cells.map(cell => [cell.val[0], cell.val[1], 200]); // last value = intensity
+ 
     const heatLayer = L.heatLayer(points, { radius: 25 }).addTo(map);
 
     return () => {

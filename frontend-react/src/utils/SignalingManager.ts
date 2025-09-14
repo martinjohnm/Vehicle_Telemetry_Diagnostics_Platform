@@ -59,6 +59,7 @@ export class SignalingManager {
 
                     if (type == "ANALYTICS") {
                         callback(message as AnalyticsData)
+          
                     }
                 })
             }

@@ -10,8 +10,14 @@ export class CarManager {
     private static instance : CarManager;
     private cars : Map<string, CarData> = new Map()
     public redisClient : RedisClientType
+
+    // analytics
     private topTenCarsBySpeed : [string, CarData][] = []
     private speedHistogram : SpeedBin[] = []
+    private carCountByCity : Map<string, number> = new Map()
+    private carAggrLatLangByCity : Map<string,[number,number]> = new Map()
+
+    private carLatAndLngArrByCity : Map<string, [number, number][]> = new Map()
 
     private constructor() {
         this.redisClient = createClient();
@@ -71,11 +77,20 @@ export class CarManager {
         
         for (const [analyticsChannel, users] of SubsciptionManager.getInstance().analyticsReverseSubscriptions) {
             
+
+            
+            
+            
             if (typeof(this.cars.get(analyticsChannel)) != undefined) {
                 //@ts-ignore
                 users?.forEach(s => UserManager.getInstance().getUser(s)?.emit_analytics({type : "ANALYTICS", 
+                    
                     top_ten_cars : this.topTenCarsBySpeed,
-                    speed_histogram : this.speedHistogram}))
+                    speed_histogram : this.speedHistogram,
+                    car_count_by_city : Array.from(this.carCountByCity, ([key, val]) => ({key, val})),
+                    car_aggr_lat_lng_city : Array.from(this.carAggrLatLangByCity, ([key, val]) => ({key, val}))
+                }
+                ) )
             }
 
             
@@ -88,9 +103,10 @@ export class CarManager {
   
         this.filterTopTenCarBySpeed()
         this.createSpeedHistogram()
-        console.log(this.speedHistogram);
-        
+        this.createCarCityCountMap()
+        this.createCarLatLngCountMap()
 
+     
     }
 
     private initBuckets(start: number , end: number, binSize: number) {
@@ -130,6 +146,42 @@ export class CarManager {
     .sort((a, b) => b[1].speed - a[1].speed) // sort descending by speed
     .slice(0, 10)
    
+    }
+
+    private createCarCityCountMap() {
+        this.carCountByCity = new Map()
+        for (const [carId, car] of this.cars.entries()) {
+   
+            if (this.carCountByCity.has(car.city) && this.carLatAndLngArrByCity.has(car.city)) {
+                this.carCountByCity.set(car.city,  (this.carCountByCity.get(car.city) ?? 0) + 1);
+                this.carLatAndLngArrByCity.get(car.city)!.push([car.latitude, car.longitude]);
+            } else {
+                this.carCountByCity.set(car.city, 1);
+                this.carLatAndLngArrByCity.set(car.city, [])
+            }
+        }
+    }
+
+    private createCarLatLngCountMap() {
+        this.carAggrLatLangByCity = new Map()
+        
+
+
+        for (const [cityName, latLngArr] of this.carLatAndLngArrByCity.entries()) {
+
+            let aggrLat = 0
+            let aggrLng = 0
+
+            for (let i=0; i<latLngArr.length; i++) {
+                aggrLat += latLngArr[0][0]
+                aggrLng += latLngArr[0][1]
+            }
+            
+            let carCountForCity = this.carCountByCity.get(cityName) ?? 1
+
+            this.carAggrLatLangByCity.set(cityName, [(aggrLat/carCountForCity), (aggrLng/carCountForCity)])
+        }
+
     }
 
 }
