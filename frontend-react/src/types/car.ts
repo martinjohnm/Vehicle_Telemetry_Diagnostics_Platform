@@ -1,12 +1,14 @@
 
 export type SpeedBin = { range: string; count: number };
 
+
 export interface AnalyticsData {
     type : string, 
     top_ten_cars : [string, CarData][]
     speed_histogram : SpeedBin[],
     car_count_by_city : { key: string; val: number; }[], 
     car_aggr_lat_lng_city : { key: string; val: [number, number]; }[]
+    average_fleet_speed : number
 }
 
 
