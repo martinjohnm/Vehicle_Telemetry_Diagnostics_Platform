@@ -16,6 +16,8 @@ export class CarManager {
     private speedHistogram : SpeedBin[] = []
     private carCountByCity : Map<string, number> = new Map()
     private carAggrLatLangByCity : Map<string,[number,number]> = new Map()
+    private averageFleetSpeed : number = 0;
+
 
     private carLatAndLngArrByCity : Map<string, [number, number][]> = new Map()
 
@@ -88,7 +90,8 @@ export class CarManager {
                     top_ten_cars : this.topTenCarsBySpeed,
                     speed_histogram : this.speedHistogram,
                     car_count_by_city : Array.from(this.carCountByCity, ([key, val]) => ({key, val})),
-                    car_aggr_lat_lng_city : Array.from(this.carAggrLatLangByCity, ([key, val]) => ({key, val}))
+                    car_aggr_lat_lng_city : Array.from(this.carAggrLatLangByCity, ([key, val]) => ({key, val})),
+                    average_fleet_speed : this.averageFleetSpeed
                 }
                 ) )
             }
@@ -102,10 +105,12 @@ export class CarManager {
     private processCarData() {
   
         this.filterTopTenCarBySpeed()
+        this.calculateAvgFleetSpeed()
         this.createSpeedHistogram()
         this.createCarCityCountMap()
         this.createCarLatLngCountMap()
-
+        console.log(this.averageFleetSpeed);
+        
      
     }
 
@@ -139,6 +144,15 @@ export class CarManager {
             this.addCarToBucket(car.speed)
         }
 
+    }
+
+    private calculateAvgFleetSpeed () {
+        let val = 0;
+
+        for (const [id, car] of this.cars.entries() ) {
+            val += car.speed
+        }
+        this.averageFleetSpeed = val/5000
     }
 
     private filterTopTenCarBySpeed() {

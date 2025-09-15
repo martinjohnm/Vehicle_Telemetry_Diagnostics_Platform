@@ -8,6 +8,7 @@ export interface AnalyticsData {
     speed_histogram : SpeedBin[],
     car_count_by_city : { key: string; val: number; }[], 
     car_aggr_lat_lng_city : { key: string; val: [number, number]; }[]
+    average_fleet_speed : number
 }
 
 
