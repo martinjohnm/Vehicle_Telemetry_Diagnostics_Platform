@@ -27,8 +27,6 @@ export const LandingPage = () => {
     const [aggr_lat_lng_by_city, setAggLatLngByCity] = useState<{ key: string; val: [number, number]; }[]>([])
     const [avg_fleet_speed, setAverageSpeed] = useState<number>(0)
 
-    console.log(avg_fleet_speed);
-
       useEffect(() => {
         const init = async () => {
     
@@ -51,7 +49,7 @@ export const LandingPage = () => {
         }
     
         init()
-      }, [top_ten_carsdata_from_ws])
+      }, [top_ten_carsdata_from_ws, avg_fleet_speed])
 
     
     return <div className="p-2">
@@ -60,7 +58,7 @@ export const LandingPage = () => {
         </div>
         <div className="grid grid-cols-3 py-0.5 gap-0.5">
                 <div className="col-span-1 p-2">
-                <FleetSpeedChart avgSpeed={avg_fleet_speed} maxSpeed={top_ten_carsdata_from_ws[0][1].speed}/>
+                { top_ten_carsdata_from_ws.length !=0 && <FleetSpeedChart avgSpeed={avg_fleet_speed} maxSpeed={top_ten_carsdata_from_ws[0][1].speed}/>}
             </div>
             
             <div className="col-span-1 p-2">
