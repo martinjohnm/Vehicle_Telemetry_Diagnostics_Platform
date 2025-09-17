@@ -39,6 +39,120 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 		log.Fatal("❌ Create hypertable error:", err)
 	}
 
+	_, err = db.Exec(ctx, `
+	    
+		CREATE MATERIALIZED VIEW car_speed_1m
+		WITH (timescaledb.continuous) AS
+		SELECT time_bucket('1 minute', timestamp) AS bucket,
+			id,
+			avg(speed) AS avg_speed,
+			max(speed) AS max_speed,
+			min(speed) AS min_speed,
+			count(*)   AS samples
+		FROM car_data
+		GROUP BY bucket, id;
+
+	`)
+
+	if err != nil {
+		log.Fatal("Create aggregates error", err)
+	}
+
+		_, err = db.Exec(ctx, `
+	    
+		CREATE MATERIALIZED VIEW car_speed_5m
+		WITH (timescaledb.continuous) AS
+		SELECT time_bucket('5 minutes', timestamp) AS bucket,
+			id,
+			avg(speed) AS avg_speed,
+			max(speed) AS max_speed,
+			min(speed) AS min_speed,
+			count(*)   AS samples
+		FROM car_data
+		GROUP BY bucket, id;
+
+	`)
+
+	if err != nil {
+		log.Fatal("Create aggregates error", err)
+	}
+
+		_, err = db.Exec(ctx, `
+	    
+		CREATE MATERIALIZED VIEW car_speed_10m
+		WITH (timescaledb.continuous) AS
+		SELECT time_bucket('10 minutes', timestamp) AS bucket,
+			id,
+			avg(speed) AS avg_speed,
+			max(speed) AS max_speed,
+			min(speed) AS min_speed,
+			count(*)   AS samples
+		FROM car_data
+		GROUP BY bucket, id;
+
+	`)
+
+	if err != nil {
+		log.Fatal("Create aggregates error", err)
+	}
+
+		_, err = db.Exec(ctx, `
+	    
+		CREATE MATERIALIZED VIEW car_speed_15m
+		WITH (timescaledb.continuous) AS
+		SELECT time_bucket('15 minutes', timestamp) AS bucket,
+			id,
+			avg(speed) AS avg_speed,
+			max(speed) AS max_speed,
+			min(speed) AS min_speed,
+			count(*)   AS samples
+		FROM car_data
+		GROUP BY bucket, id;
+
+	`)
+
+	if err != nil {
+		log.Fatal("Create aggregates error", err)
+	}
+
+		_, err = db.Exec(ctx, `
+	    
+		CREATE MATERIALIZED VIEW car_speed_30m
+		WITH (timescaledb.continuous) AS
+		SELECT time_bucket('30 minutes', timestamp) AS bucket,
+			id,
+			avg(speed) AS avg_speed,
+			max(speed) AS max_speed,
+			min(speed) AS min_speed,
+			count(*)   AS samples
+		FROM car_data
+		GROUP BY bucket, id;
+
+	`)
+
+	if err != nil {
+		log.Fatal("Create aggregates error", err)
+	}
+
+		_, err = db.Exec(ctx, `
+	    
+		CREATE MATERIALIZED VIEW car_speed_1h
+		WITH (timescaledb.continuous) AS
+		SELECT time_bucket('1 hour', timestamp) AS bucket,
+			id,
+			avg(speed) AS avg_speed,
+			max(speed) AS max_speed,
+			min(speed) AS min_speed,
+			count(*)   AS samples
+		FROM car_data
+		GROUP BY bucket, id;
+
+	`)
+
+	if err != nil {
+		log.Fatal("Create aggregates error", err)
+	}
+
 
 	// Start cleanup worker (keep only last 70 minutes of data)
 	startCleanupWorker(ctx, db)
