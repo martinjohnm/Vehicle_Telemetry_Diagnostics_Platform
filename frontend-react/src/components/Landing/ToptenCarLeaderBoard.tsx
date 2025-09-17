@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { CarData } from "../../types/car";
 
 
@@ -42,6 +43,11 @@ export const  TopTenCarLeaderBoard = ({cars}: {cars : [string, CarData][]}) => {
                   width: `${barWidth(car[1].speed)}%`,
                 }}
               />
+            </div>
+            <div className="w-full justify-center flex">
+              <Link to={`/car/${car[1].id}`}>
+              <button className="bg-green-500 px-2 rounded-md cursor-pointer">Track</button>
+              </Link>
             </div>
           </li>
         ))}
