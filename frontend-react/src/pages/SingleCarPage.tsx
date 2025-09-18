@@ -8,8 +8,6 @@ export const SingleCarPage = () => {
 
     const params = useParams()
 
-    console.log(params);
-
     useEffect(() => {
 
     }, [params])

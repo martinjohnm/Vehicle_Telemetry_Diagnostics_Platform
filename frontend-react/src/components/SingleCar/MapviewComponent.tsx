@@ -4,8 +4,6 @@ import { SignalingManager } from "../../utils/SignalingManager";
 import 'leaflet/dist/leaflet.css';
 import type { IncomingMessage } from "../../types/in";
 
-
-
 interface MapState {
   type : string;
   id   : number;
@@ -37,10 +35,6 @@ const position: [number, number] = [50.8295, 12.9150];
   })
 
 
-  console.log(car);
-  
-  
-
   useEffect(() => {
     const init = async () => {
 
@@ -61,9 +55,13 @@ const position: [number, number] = [50.8295, 12.9150];
         })
 
         setPathCoords((prev) => [...prev, [data.latitude, data.longitude]])
+
+        
       }, `CAR-${car}`)
 
       return () => {
+        console.log("deregisted");
+        
         SignalingManager.getInstance().sendMessage({"method" : "UNSUBSCRIBE", "params" : [car]})
         SignalingManager.getInstance().deregisterCallBack("CAR", `CAR-${car}`)
       }
@@ -71,11 +69,13 @@ const position: [number, number] = [50.8295, 12.9150];
     }
 
     init()
+
+
+    
   }, [car])
 
 
-  console.log(mapParams);
-  
+
     return (
         <div className="w-full h-full  rounded shadow">
       <MapContainer

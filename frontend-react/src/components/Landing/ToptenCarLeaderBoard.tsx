@@ -46,7 +46,7 @@ export const  TopTenCarLeaderBoard = ({cars}: {cars : [string, CarData][]}) => {
             </div>
             <div className="w-full justify-center flex">
               <Link to={`/car/${car[1].id}`}>
-              <button className="bg-green-500 px-2 rounded-md cursor-pointer">Track</button>
+              <button className="bg-green-500 px-2 my-0.5 rounded-md cursor-pointer">View</button>
               </Link>
             </div>
           </li>
