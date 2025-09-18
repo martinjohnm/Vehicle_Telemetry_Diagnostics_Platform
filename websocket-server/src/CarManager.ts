@@ -109,8 +109,6 @@ export class CarManager {
         this.createSpeedHistogram()
         this.createCarCityCountMap()
         this.createCarLatLngCountMap()
-        console.log(this.averageFleetSpeed);
-        
      
     }
 
