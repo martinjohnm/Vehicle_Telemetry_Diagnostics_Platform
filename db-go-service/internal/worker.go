@@ -57,12 +57,12 @@ func StartWorker(ctx context.Context, rdb *rds.Client, db *pgxpool.Pool, streamK
 				// Convert to time.Time
 				t := time.Unix(tsInt, 0).UTC()
 
-				args = append(args, msg.Values["id"],msg.Values["speed"],msg.Values["latitude"], msg.Values["longitude"],msg.Values["direction"],t)
+				args = append(args, msg.Values["id"],msg.Values["speed"],msg.Values["latitude"], msg.Values["longitude"],msg.Values["direction"],t, msg.Values["city"])
 			
 				ids = append(ids, msg.ID)
 			
 				placeholders = append(placeholders,
-					fmt.Sprintf("($%d,$%d,$%d,$%d,$%d,$%d)", i*6+1, i*6+2, i*6+3, i*6+4, i*6+5, i*6+6))
+					fmt.Sprintf("($%d,$%d,$%d,$%d,$%d,$%d, $%d)", i*7+1, i*7+2, i*7+3, i*7+4, i*7+5, i*7+6, i*7+7))
 				
 				i++
 			}
@@ -70,7 +70,7 @@ func StartWorker(ctx context.Context, rdb *rds.Client, db *pgxpool.Pool, streamK
 		}
 
 
-		sql := "INSERT INTO car_data (id,speed,latitude,longitude,direction,timestamp) VALUES " + strings.Join(placeholders, ",")
+		sql := "INSERT INTO car_data (id,speed,latitude,longitude,direction,timestamp, city) VALUES " + strings.Join(placeholders, ",")
 	
 		_, err = db.Exec(ctx, sql, args...)
 		if err != nil {

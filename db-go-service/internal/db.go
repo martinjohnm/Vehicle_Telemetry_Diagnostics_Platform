@@ -20,6 +20,7 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 	_, err := db.Exec(ctx, `
 		CREATE TABLE IF NOT EXISTS car_data (
 			id 			TEXT NOT NULL,
+			city        TEXT NOT NULL,
 			speed 		DOUBLE PRECISION,
 			latitude 	DOUBLE PRECISION,
 			longitude 	DOUBLE PRECISION,
@@ -41,16 +42,17 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 
 	_, err = db.Exec(ctx, `
 	    
-		CREATE MATERIALIZED VIEW car_speed_1m
+		CREATE MATERIALIZED VIEW IF NOT EXISTS car_speed_1m
 		WITH (timescaledb.continuous) AS
 		SELECT time_bucket('1 minute', timestamp) AS bucket,
 			id,
+			city,
 			avg(speed) AS avg_speed,
 			max(speed) AS max_speed,
 			min(speed) AS min_speed,
 			count(*)   AS samples
 		FROM car_data
-		GROUP BY bucket, id;
+		GROUP BY bucket, id, city;
 
 	`)
 
@@ -60,16 +62,17 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 
 		_, err = db.Exec(ctx, `
 	    
-		CREATE MATERIALIZED VIEW car_speed_5m
+		CREATE MATERIALIZED VIEW IF NOT EXISTS car_speed_5m
 		WITH (timescaledb.continuous) AS
 		SELECT time_bucket('5 minutes', timestamp) AS bucket,
 			id,
+			city,
 			avg(speed) AS avg_speed,
 			max(speed) AS max_speed,
 			min(speed) AS min_speed,
 			count(*)   AS samples
 		FROM car_data
-		GROUP BY bucket, id;
+		GROUP BY bucket, id, city;
 
 	`)
 
@@ -79,16 +82,17 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 
 		_, err = db.Exec(ctx, `
 	    
-		CREATE MATERIALIZED VIEW car_speed_10m
+		CREATE MATERIALIZED VIEW IF NOT EXISTS car_speed_10m
 		WITH (timescaledb.continuous) AS
 		SELECT time_bucket('10 minutes', timestamp) AS bucket,
 			id,
+			city,
 			avg(speed) AS avg_speed,
 			max(speed) AS max_speed,
 			min(speed) AS min_speed,
 			count(*)   AS samples
 		FROM car_data
-		GROUP BY bucket, id;
+		GROUP BY bucket, id, city;
 
 	`)
 
@@ -98,16 +102,17 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 
 		_, err = db.Exec(ctx, `
 	    
-		CREATE MATERIALIZED VIEW car_speed_15m
+		CREATE MATERIALIZED VIEW IF NOT EXISTS car_speed_15m
 		WITH (timescaledb.continuous) AS
 		SELECT time_bucket('15 minutes', timestamp) AS bucket,
 			id,
+			city,
 			avg(speed) AS avg_speed,
 			max(speed) AS max_speed,
 			min(speed) AS min_speed,
 			count(*)   AS samples
 		FROM car_data
-		GROUP BY bucket, id;
+		GROUP BY bucket, id, city;
 
 	`)
 
@@ -117,16 +122,17 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 
 		_, err = db.Exec(ctx, `
 	    
-		CREATE MATERIALIZED VIEW car_speed_30m
+		CREATE MATERIALIZED VIEW IF NOT EXISTS car_speed_30m
 		WITH (timescaledb.continuous) AS
 		SELECT time_bucket('30 minutes', timestamp) AS bucket,
 			id,
+			city,
 			avg(speed) AS avg_speed,
 			max(speed) AS max_speed,
 			min(speed) AS min_speed,
 			count(*)   AS samples
 		FROM car_data
-		GROUP BY bucket, id;
+		GROUP BY bucket, id, city;
 
 	`)
 
@@ -136,16 +142,17 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 
 		_, err = db.Exec(ctx, `
 	    
-		CREATE MATERIALIZED VIEW car_speed_1h
+		CREATE MATERIALIZED VIEW IF NOT EXISTS car_speed_1h
 		WITH (timescaledb.continuous) AS
 		SELECT time_bucket('1 hour', timestamp) AS bucket,
 			id,
+			city,
 			avg(speed) AS avg_speed,
 			max(speed) AS max_speed,
 			min(speed) AS min_speed,
 			count(*)   AS samples
 		FROM car_data
-		GROUP BY bucket, id;
+		GROUP BY bucket, id, city;
 
 	`)
 

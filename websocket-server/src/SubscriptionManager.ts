@@ -36,6 +36,9 @@ export class SubsciptionManager {
     
 
     public subscribe(userId : string, subscription : string) {
+
+        console.log("subscribe request", subscription);
+
         if (this.subscriptions.get(userId)?.includes(subscription)) {
             return
         }
@@ -55,6 +58,9 @@ export class SubsciptionManager {
 
     public unsubscribe(userId : string, subscription : string) {
         const existingSubscriptions = this.subscriptions.get(userId)
+
+        console.log("unsubscribe request", subscription);
+        
 
         if (existingSubscriptions) {
             this.subscriptions.set(userId, existingSubscriptions.filter(s => s!== userId));
