@@ -179,6 +179,7 @@ func (m *CarManager) UpdateTelematics(carID string) {
 	m.Telemetry[carID].Type = finalcar.Type
 	m.Telemetry[carID].FuelLevel = finalcar.FuelLevel
 	m.Telemetry[carID].Status = finalcar.Status
+	m.Telemetry[carID].City = finalcar.City
 	}
 
 
