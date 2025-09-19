@@ -9,6 +9,9 @@ import { carRouter } from "./routes/car"
 
 const app = express()
 // Allow requests from React dev server (port 5173)
+
+console.log("hai ddaa");
+
 app.use(cors({
   origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
