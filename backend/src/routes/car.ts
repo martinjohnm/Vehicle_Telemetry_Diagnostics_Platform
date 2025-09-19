@@ -153,3 +153,21 @@ carRouter.get("/1h", async (req : Request,res : Response) => {
     }
     
 })
+
+
+carRouter.get("/distinct", async (req :Request, res : Response) => {
+    try {
+        console.log("called");
+        
+        let query = `SELECT DISTINCT id
+                    FROM car_data
+                    ORDER BY id;
+                    `   
+        const result = await pgClient.query(query)
+        return res.json({
+            data : result.rows
+        })
+    } catch(e) {
+
+    }
+})
