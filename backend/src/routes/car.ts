@@ -29,11 +29,11 @@ carRouter.get("/", async (req,res) => {
 })
 
 
-carRouter.get("/1m/:id", async (req : Request,res : Response) => {
+carRouter.get("/1m", async (req : Request,res : Response) => {
 
 
     try {
-        const { id } = req.params;
+        const { id, start, end } = req.query;
         // SELECT bucket, avg_speed FROM car_speed_1m where id='CAR-123' and bucket >= NOW() - interval '2 days';
         let query = `SELECT * FROM car_speed_1m WHERE bucket >= $1 AND bucket <= $2 and id='${id}'`;
 
@@ -49,11 +49,11 @@ carRouter.get("/1m/:id", async (req : Request,res : Response) => {
     
 })
 
-carRouter.get("/5m/:id", async (req : Request,res : Response) => {
+carRouter.get("/5m", async (req : Request,res : Response) => {
 
 
     try {
-        const { id } = req.params;
+        const { id, start, end } = req.query;
         // SELECT bucket, avg_speed FROM car_speed_1m where id='CAR-123' and bucket >= NOW() - interval '2 days';
         let query = `SELECT * FROM car_speed_5m WHERE bucket >= $1 AND bucket <= $2 and id='${id}'`;
 
@@ -70,11 +70,11 @@ carRouter.get("/5m/:id", async (req : Request,res : Response) => {
 })
 
 
-carRouter.get("/10m/:id", async (req : Request,res : Response) => {
+carRouter.get("/10m", async (req : Request,res : Response) => {
 
 
     try {
-        const { id } = req.params;
+        const { id, start, end } = req.query;
         // SELECT bucket, avg_speed FROM car_speed_1m where id='CAR-123' and bucket >= NOW() - interval '2 days';
         let query = `SELECT * FROM car_speed_10m WHERE bucket >= $1 AND bucket <= $2 and id='${id}'`;
 
@@ -91,11 +91,11 @@ carRouter.get("/10m/:id", async (req : Request,res : Response) => {
 })
 
 
-carRouter.get("/15m/:id", async (req : Request,res : Response) => {
+carRouter.get("/15m", async (req : Request,res : Response) => {
 
 
     try {
-        const { id } = req.params;
+        const { id, start, end } = req.query;
         // SELECT bucket, avg_speed FROM car_speed_1m where id='CAR-123' and bucket >= NOW() - interval '2 days';
         let query = `SELECT * FROM car_speed_15m WHERE bucket >= $1 AND bucket <= $2 and id='${id}'`;
 
@@ -112,11 +112,11 @@ carRouter.get("/15m/:id", async (req : Request,res : Response) => {
 })
 
 
-carRouter.get("/30m/:id", async (req : Request,res : Response) => {
+carRouter.get("/30m", async (req : Request,res : Response) => {
 
 
     try {
-        const { id } = req.params;
+        const { id, start, end } = req.query;
         // SELECT bucket, avg_speed FROM car_speed_1m where id='CAR-123' and bucket >= NOW() - interval '2 days';
         let query = `SELECT * FROM car_speed_30m WHERE bucket >= $1 AND bucket <= $2 and id='${id}'`;
 
@@ -133,11 +133,11 @@ carRouter.get("/30m/:id", async (req : Request,res : Response) => {
 })
 
 
-carRouter.get("/1h/:id", async (req : Request,res : Response) => {
+carRouter.get("/1h", async (req : Request,res : Response) => {
 
 
     try {
-        const { id } = req.params;
+        const { id, start, end } = req.query;
         // SELECT bucket, avg_speed FROM car_speed_1m where id='CAR-123' and bucket >= NOW() - interval '2 days';
         let query = `SELECT * FROM car_speed_1h WHERE bucket >= $1 AND bucket <= $2 and id='${id}'`;
 
@@ -148,7 +148,8 @@ carRouter.get("/1h/:id", async (req : Request,res : Response) => {
         })
         
     } catch(e) {
-
+        console.log("errror", e);
+        
     }
     
 })
