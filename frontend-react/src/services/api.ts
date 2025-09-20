@@ -12,7 +12,6 @@ export async function apiRequest<T>(
   config: FetchConfig = {}
 ): Promise<T> {
   const { method = "GET", headers = {}, body } = config;
-        console.log("diticnt called");
 
   const response = await fetch(`${baseURL}${endpoint}`, {
     method,
