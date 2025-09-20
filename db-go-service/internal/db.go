@@ -25,7 +25,8 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 			latitude 	DOUBLE PRECISION,
 			longitude 	DOUBLE PRECISION,
 			direction 	DOUBLE PRECISION,
-			timestamp 	TIMESTAMPTZ NOT NULL
+			timestamp 	TIMESTAMPTZ NOT NULL,
+			PRIMARY KEY (id, timestamp)  
 		);
 	`)
 	if err != nil {
@@ -38,6 +39,13 @@ func InitSchema(ctx context.Context, db *pgxpool.Pool) {
 	`)
 	if err != nil {
 		log.Fatal("❌ Create hypertable error:", err)
+	}
+
+	_, err = db.Exec(ctx, `
+		CREATE INDEX IF NOT EXISTS idx_car_timestamp ON car_data (id, timestamp DESC);
+	`)
+	if err != nil {
+		log.Fatal("❌ Create Index error:", err)
 	}
 
 	_, err = db.Exec(ctx, `

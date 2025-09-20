@@ -1,9 +1,15 @@
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-import type { Timedata } from "../../types/historydata";
+import { useRecoilValue } from "recoil";
+import { speedDataByRange } from "../../store/atoms";
 
 
 
-export const BucketGraph = ({data} : {data : Timedata[]}) => {
+export const BucketGraph = () => {
+
+  const data = useRecoilValue(speedDataByRange)
+  // console.log(data);
+  
+  if (data === null) return <p>Loading...</p>;
 
 
   return (
