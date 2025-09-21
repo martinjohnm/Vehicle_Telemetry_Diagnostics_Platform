@@ -1,10 +1,11 @@
+import { API_BASES } from "../config";
 import type { AnalyticsData, CarData } from "../types/car";
 import type { OutgoingMessage } from "../types/out";
 
 
 
 
-export const BASE_URL = "ws://localhost:3001"
+export const BASE_URL = API_BASES.WS_SERVER
 
 
 export class SignalingManager {

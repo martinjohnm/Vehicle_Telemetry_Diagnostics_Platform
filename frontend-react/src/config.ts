@@ -1,4 +1,4 @@
 export const API_BASES = {
-  CAR: "http://localhost:3003",
-  POSTS: "http://localhost:7000",
+  BACKEND: import.meta.env.VITE_BACKEND_URL ?? "http://localhost:3003",
+  WS_SERVER: import.meta.env.VITE_WS_SERVER ?? "ws://localhost:3001"
 };
