@@ -25,7 +25,7 @@ export const useGetSpeedForSelectedDateTime = () => {
                 interval
             });
             
-            const response = await apiRequest<{result : Timedata[]}>(API_BASES.CAR, `/api/v1/car/speed-data-by-interval?${params.toString()}`);
+            const response = await apiRequest<{result : Timedata[]}>(API_BASES.BACKEND, `/api/v1/car/speed-data-by-interval?${params.toString()}`);
             console.log(response.result);
             
             setSpeedData([...response.result])

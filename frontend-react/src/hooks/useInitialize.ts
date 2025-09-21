@@ -19,7 +19,7 @@ export const useInitialize = () => {
     const fetchCars = async () => {
       try {
         
-        const response = await apiRequest<{data : carId[]}>(API_BASES.CAR, "/api/v1/car/distinct");
+        const response = await apiRequest<{data : carId[]}>(API_BASES.BACKEND, "/api/v1/car/distinct");
         
         setCarIds(response.data)
 
