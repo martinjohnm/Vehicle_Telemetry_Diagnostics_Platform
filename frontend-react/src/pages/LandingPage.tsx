@@ -6,6 +6,10 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import type { AnalyticsData, CarData } from "../types/car";
 import { TopTenCarLeaderBoard } from "../components/Landing/ToptenCarLeaderBoard";
 import { FleetSpeedChart } from "../components/Landing/Flatspeedchart";
+import { Link } from "react-router-dom";
+import CarSelector from "../components/Historic/CarSelector";
+import { useRecoilValue } from "recoil";
+import { selectedCarId } from "../store/atoms";
 // import type { AnalyticsTypes } from "../types/out"
 
 
@@ -26,6 +30,8 @@ export const LandingPage = () => {
     const [speed_histogram, setSpeedHistogram] = useState<SpeedBin[]>([])
     const [aggr_lat_lng_by_city, setAggLatLngByCity] = useState<{ key: string; val: [number, number]; }[]>([])
     const [avg_fleet_speed, setAverageSpeed] = useState<number>(0)
+    const selectedCarIdd = useRecoilValue(selectedCarId)
+    
 
       useEffect(() => {
         const init = async () => {
@@ -55,6 +61,15 @@ export const LandingPage = () => {
     return <div className="p-2">
         <div className="w-full bg-slate-100 rounded-2xl flex items-center">
             <p className="text-4xl p-2">Telematics dashboard</p>
+            <Link to={"/analytics"}><button className="p-2 bg-green-400 rounded-md text-medium font-bold hover:bg-green-500 cursor-pointer">See analytics</button></Link>
+            
+                <CarSelector/>
+           
+            <Link to={`/car/${selectedCarIdd}`}>
+            
+              <button className="p-2 bg-green-400 rounded-md text-medium font-bold hover:bg-green-500 cursor-pointer">View By carId</button>
+            </Link>
+
         </div>
         <div className="grid grid-cols-6 py-0.5 gap-0.5">
             <div className="col-span-1 p-2">

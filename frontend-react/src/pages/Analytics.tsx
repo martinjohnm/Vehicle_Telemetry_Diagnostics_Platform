@@ -8,7 +8,7 @@ import { IntervalSelector } from "../components/Historic/IntervalSelector";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export const HistoricPage = () => {
+export const AnalyticsPage = () => {
 
 
     const now = new Date();

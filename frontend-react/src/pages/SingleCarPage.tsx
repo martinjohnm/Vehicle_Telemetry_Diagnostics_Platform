@@ -13,8 +13,11 @@ export const SingleCarPage = () => {
     }, [params])
     
 
-    return     <div className="h-screen w-screen flex items-center justify-center">
-          <div className="w-2/3 h-2/3 flex items-center justify-center bg-red-300"> 
+    return     <div className="h-screen w-screen items-center justify-center">
+          <div className="w-full bg-slate-100 rounded-2xl flex items-center">
+            <p className="text-4xl p-2">Live View of car-id = {params.id}</p>
+        </div>
+          <div className="w-full h-full flex items-center justify-center"> 
             <MapviewComponent car={`${params.id}`}/>
           </div>
         </div>
