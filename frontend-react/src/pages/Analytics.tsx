@@ -5,11 +5,17 @@ import { useRecoilValue } from "recoil";
 import { selectedCarId, selectedIntervalState } from "../store/atoms";
 import { useGetSpeedForSelectedDateTime } from "../hooks/useGetSpeedForSelectedDateTime";
 import { IntervalSelector } from "../components/Historic/IntervalSelector";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-export const HistoricPage = () => {
+export const AnalyticsPage = () => {
 
-    const [startDateTime, setStartDateTime] = useState("");
-    const [endDateTime, setEndDateTime] = useState("");
+
+    const now = new Date();
+    const tenMinutesBefore = new Date(now.getTime() - 10 * 60 * 1000);
+
+    const [startDateTime, setStartDateTime] = useState<Date>(tenMinutesBefore);
+    const [endDateTime, setEndDateTime] = useState<Date>(now);
     const selectedCarIdd = useRecoilValue(selectedCarId)
     const interval = useRecoilValue(selectedIntervalState)
     const {getSpeedByDateAndTime} = useGetSpeedForSelectedDateTime()
@@ -20,6 +26,8 @@ export const HistoricPage = () => {
             alert("no date selected")
             return 
         }
+        console.log(startDateTime, endDateTime);
+        
         getSpeedByDateAndTime({carId : selectedCarIdd, startTime : startDateTime, endTime : endDateTime, interval: interval})
     }
 
@@ -33,19 +41,36 @@ export const HistoricPage = () => {
                 <div className="flex justify-center gap-1">
                     <div className="flex justify-center flex-col">
                         <label className="font-bold" htmlFor="">{"start-time"}</label>
-                        <input         
+                        {/* <input         
                             type="datetime-local"
                             onChange={(e) => setStartDateTime(e.target.value)}
                             value={startDateTime}
-                            className="px-5 py-2 bg-slate-200"/>
+                            defaultValue={startDateTime}
+
+                            className="px-5 py-2 bg-slate-200"/> */}
+                            <DatePicker
+                                  selected={new Date(startDateTime)}
+                                  onChange={(date: Date | null) => setStartDateTime(date ?? new Date())}
+                                  showTimeSelect
+                                  dateFormat="yyyy-MM-dd HH:mm"
+                                  className="border rounded p-2 w-64"
+                                />
                     </div>
                     <div className="flex justify-center flex-col">
                         <label className="font-bold" htmlFor="">{"end-time"}</label>
-                        <input         
+                        {/* <input         
                             type="datetime-local"
                             onChange={(e) => setEndDateTime(e.target.value)}
                             value={endDateTime}
-                            className="px-5 py-2 bg-slate-200"/>
+                            defaultValue={endDateTime}
+                            className="px-5 py-2 bg-slate-200"/> */}
+                            <DatePicker
+                                  selected={new Date(endDateTime)}
+                                  onChange={(date: Date | null) => setEndDateTime(date ?? new Date())}
+                                  showTimeSelect
+                                  dateFormat="yyyy-MM-dd HH:mm"
+                                  className="border rounded p-2 w-64"
+                                />
                     </div>
                     <div className="flex justify-center flex-col">
                         <label className="font-bold" htmlFor="">{"car-id"}</label>

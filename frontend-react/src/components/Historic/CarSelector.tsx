@@ -24,6 +24,7 @@ const setSelctedCarId = (value : string) => {
       onChange={(selected) => setSelctedCarId(selected?.value ?? "CAR-1")}
       isSearchable
       placeholder="Select a car..."
+      className=" z-50"
     />
   );
 }

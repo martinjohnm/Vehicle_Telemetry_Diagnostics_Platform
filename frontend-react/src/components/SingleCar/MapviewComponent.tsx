@@ -1,83 +1,87 @@
-import { useEffect, useState } from "react";
 import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
-import { SignalingManager } from "../../utils/SignalingManager";
 import 'leaflet/dist/leaflet.css';
-import type { IncomingMessage } from "../../types/in";
+import { useRecoilValue } from "recoil";
+import { singleCarMapState, singleCarPathCoords } from "../../store/atoms";
+import { useSubscribeSingleCarChannel } from "../../hooks/useSubscribeSingleCarChannel";
 
-interface MapState {
-  type : string;
-  id   : number;
-  city : string;
-  speed : number;
-  latitude : number;
-  longitude : number;
-  fuel_level : number;
-  direction : number;
-  status : string;
-  timestamp  :string
-}
+
 
 export const MapviewComponent = ({car}: {car: string}) => {
-const position: [number, number] = [50.8295, 12.9150];
-  const [pathCoords, setPathCoords] = useState<[number, number][]>([]);
 
-  const [mapParams , setMapParams] = useState<MapState>({
-    type : "",
-    id: 0,
-    city : "",
-    speed : 0,
-    latitude : 0,
-    longitude : 0,
-    fuel_level : 0,
-    direction : 0,
-    status : "",
-    timestamp  :""
-  })
+  // const [carid, setCarId] = useRecoilState(selectedCarId)
+
+  // setCarId(car)
+  const position: [number, number] = [50.8295, 12.9150];
+  // const [pathCoords, setPathCoords] = useState<[number, number][]>([]);
+
+  // const [map? , setmap?] = useState<MapState>({
+  //   type : "",
+  //   id: 0,
+  //   city : "",
+  //   speed : 0,
+  //   latitude : 0,
+  //   longitude : 0,
+  //   fuel_level : 0,
+  //   direction : 0,
+  //   status : "",
+  //   timestamp  :""
+  // })
 
 
-  useEffect(() => {
-    const init = async () => {
 
-      SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE", "params" : [car]})
+  const path = useRecoilValue(singleCarPathCoords)
+  const map = useRecoilValue(singleCarMapState)
 
-      SignalingManager.getInstance().registerCallBack("CAR", (data: IncomingMessage) => {
-        setMapParams({
-          type : data.type,
-          id: data.id,
-          city : data.city,
-          speed : data.speed,
-          latitude : data.latitude,
-          longitude : data.longitude,
-          fuel_level : data.fuel_level,
-          direction : data.direction,
-          status : data.status,
-          timestamp  :data.timestamp
-        })
+  useSubscribeSingleCarChannel(car)
 
-        setPathCoords((prev) => [...prev, [data.latitude, data.longitude]])
+
+  
+  // useEffect(() => {
+  //   const init = async () => {
+
+  //     SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE", "params" : [car]})
+
+  //     SignalingManager.getInstance().registerCallBack("CAR", (data: IncomingMessage) => {
+  //       setmap?({
+  //         type : data.type,
+  //         id: data.id,
+  //         city : data.city,
+  //         speed : data.speed,
+  //         latitude : data.latitude,
+  //         longitude : data.longitude,
+  //         fuel_level : data.fuel_level,
+  //         direction : data.direction,
+  //         status : data.status,
+  //         timestamp  :data.timestamp
+  //       })
+
+  //       setPathCoords((prev) => [...prev, [data.latitude, data.longitude]])
 
         
-      }, `CAR-${car}`)
+  //     }, `CAR-${car}`)
 
-      return () => {
-        console.log("deregisted");
+  //     return () => {
+  //       console.log("deregisted");
         
-        SignalingManager.getInstance().sendMessage({"method" : "UNSUBSCRIBE", "params" : [car]})
-        SignalingManager.getInstance().deregisterCallBack("CAR", `CAR-${car}`)
-      }
+  //       SignalingManager.getInstance().sendMessage({"method" : "UNSUBSCRIBE", "params" : [car]})
+  //       SignalingManager.getInstance().deregisterCallBack("CAR", `CAR-${car}`)
+  //     }
 
-    }
+  //   }
 
-    init()
+  //   init()
 
 
     
-  }, [car])
+  // }, [carid, car])
 
 
 
     return (
         <div className="w-full h-full  rounded shadow">
+          <div className="p-2 justify-center items-center flex">
+            <div className='font-bold'>{`Driving at ${map?.speed} km/h in ${map?.city}`}</div>
+          </div>
       <MapContainer
         center={position}
         zoom={14}
@@ -88,20 +92,20 @@ const position: [number, number] = [50.8295, 12.9150];
           attribution='&copy; OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[mapParams.latitude, mapParams.longitude]}>
-          <Popup>Car location</Popup>
+        <Marker position={[map?.latitude ?? position[0],map?.longitude ?? position[1]]}>
+          <Popup><div className=''><span>{`Lat : `}</span>{`${map?.latitude}`}</div>
+            <div className=''><span>{`Lng : `}</span>{`${map?.longitude}`}</div>
+            <div className=''><span>{`speed : `}</span>{`${map?.speed}`}</div>
+            <div className=''><span>{`Direction : `}</span>{`${map?.direction}`}</div>
+            <div className=''><span>{`City : `}</span>{`${map?.city}`}</div></Popup>
         </Marker>
 
-        {pathCoords.length > 0 && (
-          <Polyline positions={pathCoords} color='red' />
+        {path.length > 0 && (
+          <Polyline positions={path} color='red' />
         )}
 
       </MapContainer>
-      <div className='bg-red-600'>{`Latitude : ${mapParams.latitude}`}</div>
-      <div className='bg-red-600'>{`Longitude : ${mapParams.longitude}`}</div>
-      <div className='bg-red-600'>{`speed : ${mapParams.speed}`}</div>
-      <div className='bg-red-600'>{`Direction : ${mapParams.direction}`}</div>
-      <div className='bg-red-600'>{`City : ${mapParams.city}`}</div>
+      
     </div>
     )
 }
