@@ -11,11 +11,11 @@ export const useGetSpeedForSelectedDateTime = () => {
 
     const setSpeedData = useSetRecoilState(speedDataByRange)
 
-    const getSpeedByDateAndTime = async ({carId, startTime, endTime, interval} : {carId : string, startTime : string, endTime : string, interval : string}) => {
+    const getSpeedByDateAndTime = async ({carId, startTime, endTime, interval} : {carId : string, startTime : Date, endTime : Date, interval : string}) => {
         try {
 
-            const start = new Date(startTime).toISOString();
-            const end = new Date(endTime).toISOString();
+            const start = startTime.toISOString();
+            const end = endTime.toISOString();
 
        
             const params = new URLSearchParams({

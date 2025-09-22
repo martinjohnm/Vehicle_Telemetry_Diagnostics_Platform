@@ -56,20 +56,35 @@ export const LandingPage = () => {
         <div className="w-full bg-slate-100 rounded-2xl flex items-center">
             <p className="text-4xl p-2">Telematics dashboard</p>
         </div>
-        <div className="grid grid-cols-3 py-0.5 gap-0.5">
-                <div className="col-span-1 p-2">
-                { top_ten_carsdata_from_ws.length !=0 && <FleetSpeedChart avgSpeed={avg_fleet_speed} maxSpeed={top_ten_carsdata_from_ws[0][1].speed}/>}
-            </div>
-            
+        <div className="grid grid-cols-6 py-0.5 gap-0.5">
             <div className="col-span-1 p-2">
+                { top_ten_carsdata_from_ws.length !=0 && <FleetSpeedChart avgSpeed={avg_fleet_speed} maxSpeed={top_ten_carsdata_from_ws[0][1].speed}/>}
                 <TopTenCarLeaderBoard cars={top_ten_carsdata_from_ws}/>
             </div>
             
+            <div className="col-span-5">
+              <div className="col-span-2 p-2 h-screen bg-amber-400">
+                  <MapContainer
+                center={position}
+                zoom={5}
+                scrollWheelZoom={true}
+                style={{ height: '100%', width: '100%' }}
+                >
+                    <TileLayer
+                            attribution='&copy; OpenStreetMap contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          />
+                  <DensityHeatmap cells={aggr_lat_lng_by_city}/>
+                </MapContainer>
+              </div>
+            </div>
+            
             <div className="col-span-1">
+                <div className="p-4"><p>{"No of cars in speed range"}</p></div>
                 <Histogram bins={speed_histogram} width={600} height={400}/>
             </div>
         </div>
-        <div className="py-0.5 gap-0.5">
+        {/* <div className="py-0.5 gap-0.5">
             <div className="col-span-2 p-2 h-screen bg-amber-400">
                 <MapContainer
               center={position}
@@ -84,14 +99,7 @@ export const LandingPage = () => {
                 <DensityHeatmap cells={aggr_lat_lng_by_city}/>
               </MapContainer>
             </div>
-        </div>
-        <div className="grid grid-cols-3 py-0.5 gap-0.5">
-            <div className="col-span-2 p-2 h-96 bg-red-300">
-                
-            </div>
-            <div className="col-span-1 bg-green-300">
-
-            </div>
-        </div>
+        </div> */}
+      
     </div>
 }
