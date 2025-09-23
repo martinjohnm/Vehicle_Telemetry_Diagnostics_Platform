@@ -4,21 +4,26 @@ import { useRecoilValue } from "recoil";
 import { singleCarMapState, singleCarPathCoords } from "../../store/atoms";
 import { useSubscribeSingleCarChannel } from "../../hooks/useSubscribeSingleCarChannel";
 import { useGetLast10MinsPathLineData } from "../../hooks/useGetLast10MinsPathLineData";
+import TimeIntervalForPathSelector from "./TimeIntervalForPathSelector";
 
 
 
-export const MapviewComponent = ({car}: {car: string}) => {
+export const MapviewComponent = ({carId}: {carId: string}) => {
   
   const position: [number, number] = [50.8295, 12.9150];
   const path = useRecoilValue(singleCarPathCoords)
   const map = useRecoilValue(singleCarMapState)
 
-  useSubscribeSingleCarChannel(car)
-  useGetLast10MinsPathLineData(car)
+
+  useSubscribeSingleCarChannel(carId)
+  useGetLast10MinsPathLineData(carId)
+
     return (
         <div className="w-full h-full  rounded shadow">
-          <div className="p-2 justify-center items-center flex">
+          <div className="p-2 justify-between items-center flex max-w-3xl container mx-auto">
             <div className='font-bold'>{`Driving at ${map?.speed} km/h in ${map?.city}`}</div>
+            <TimeIntervalForPathSelector/>
+            
           </div>
       <MapContainer
         center={[map?.latitude ?? position[0],map?.longitude ?? position[1]]}

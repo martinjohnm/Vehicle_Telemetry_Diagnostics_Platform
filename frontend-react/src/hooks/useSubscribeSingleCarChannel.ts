@@ -28,7 +28,7 @@ export const useSubscribeSingleCarChannel = (car: string) => {
             timestamp  :data.timestamp
             })
 
-            setPath((prev) => [...prev, [data.latitude, data.longitude]])
+            setPath((prev) => [...prev.slice(1), [data.latitude, data.longitude]])
 
             
         }, `CAR-${car}`)

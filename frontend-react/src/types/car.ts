@@ -44,3 +44,14 @@ export interface PathState {
   latitude : number;
   longitude : number;
 }
+
+
+export const TimeIntervalPath = {
+  
+  TEN_MIN: 10,
+  FIFTEEN_MIN: 15,
+  THIRTY_MIN: 30,
+  ONE_HOUR: 60,
+} as const;
+
+export type TimeIntervalToQueryPath = typeof TimeIntervalPath[keyof typeof TimeIntervalPath]

@@ -18,7 +18,7 @@ export const SingleCarPage = () => {
             <p className="text-4xl p-2">Live View of car-id = {params.id}</p>
         </div>
           <div className="w-full h-full flex items-center justify-center"> 
-            <MapviewComponent car={`${params.id}`}/>
+            <MapviewComponent carId={`${params.id}`}/>
           </div>
         </div>
         

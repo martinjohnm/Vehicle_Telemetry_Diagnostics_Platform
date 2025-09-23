@@ -4,7 +4,6 @@
 
 
 
-
 export const TimeInterval = {
   ONE_MIN: "1m",
   FIVE_MIN: "5m",

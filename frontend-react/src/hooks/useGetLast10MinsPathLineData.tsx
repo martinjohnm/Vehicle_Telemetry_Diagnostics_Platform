@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import { useSetRecoilState } from "recoil"
-import { singleCarPathCoords } from "../store/atoms"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { pathLineTimeInterval, singleCarPathCoords } from "../store/atoms"
 import { apiRequest } from "../services/api"
 import { API_BASES } from "../config"
 import type { CarData } from "../types/car"
@@ -12,7 +12,7 @@ export const useGetLast10MinsPathLineData = (carId : string) => {
 
     const setPath = useSetRecoilState(singleCarPathCoords)
 
-
+    const interval = useRecoilValue(pathLineTimeInterval)
     
     useEffect(() => {
 
@@ -21,7 +21,7 @@ export const useGetLast10MinsPathLineData = (carId : string) => {
                 try {
         
             
-                    const response = await apiRequest<{result : CarData[]}>(API_BASES.BACKEND, `/api/v1/car/car-path-by-id?carId=${carId}`);
+                    const response = await apiRequest<{result : CarData[]}>(API_BASES.BACKEND, `/api/v1/car/car-path-by-id?carId=${carId}&interval=${interval}`);
                     console.log(response.result[0]);
 
                     const path : [number, number][] = []
@@ -35,5 +35,5 @@ export const useGetLast10MinsPathLineData = (carId : string) => {
             }
         
         getPath()
-    }, [carId])
+    }, [carId, interval])
 }
