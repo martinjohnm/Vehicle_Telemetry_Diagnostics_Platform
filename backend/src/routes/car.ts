@@ -63,6 +63,39 @@ carRouter.get("/speed-data-by-interval", async (req : Request,res : Response) =>
     
 })
 
+carRouter.get("/car-path-by-id", async (req : Request, res : Response) => {
+    try {
+        const { carId, start, end, interval } = req.query;
+
+        // console.log("speed called");
+        
+
+        // if (!carId || !start || !end || !interval) {
+        //     return res.status(400).json({ error: "Missing required params" });
+        // }
+        // const startDate = new Date(start as string);
+        // const endDate = new Date(end as string);
+
+        
+        // if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        // return res.status(400).json({ error: "Invalid date format" });
+        // }
+
+  
+        let query = `SELECT latitude, longitude FROM car_data WHERE id = $1 AND timestamp >= NOW() - interval '10 minutes' ORDER BY timestamp ASC`;
+
+        const result = await pgClient.query(query, [carId])
+        console.log(result.rows.length);
+        
+        return res.json({
+            result : result.rows
+        })
+        
+    } catch(e) {
+
+    }
+})
+
 
 carRouter.get("/distinct", async (req :Request, res : Response) => {
     try {
