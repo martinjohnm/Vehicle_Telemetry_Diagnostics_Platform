@@ -22,7 +22,6 @@ export const useGetLast10MinsPathLineData = (carId : string) => {
         
             
                     const response = await apiRequest<{result : CarData[]}>(API_BASES.BACKEND, `/api/v1/car/car-path-by-id?carId=${carId}&interval=${interval}`);
-                    console.log(response.result[0]);
 
                     const path : [number, number][] = []
                     response.result.map(pat => (path.push([pat.latitude, pat.longitude])))

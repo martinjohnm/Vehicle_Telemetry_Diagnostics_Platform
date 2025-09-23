@@ -2,21 +2,15 @@ import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet"
 import 'leaflet/dist/leaflet.css';
 import { useRecoilValue } from "recoil";
 import { singleCarMapState, singleCarPathCoords } from "../../store/atoms";
-import { useSubscribeSingleCarChannel } from "../../hooks/useSubscribeSingleCarChannel";
-import { useGetLast10MinsPathLineData } from "../../hooks/useGetLast10MinsPathLineData";
 import TimeIntervalForPathSelector from "./TimeIntervalForPathSelector";
 
 
 
-export const MapviewComponent = ({carId}: {carId: string}) => {
+export const MapviewComponent = () => {
   
   const position: [number, number] = [50.8295, 12.9150];
   const path = useRecoilValue(singleCarPathCoords)
   const map = useRecoilValue(singleCarMapState)
-
-
-  useSubscribeSingleCarChannel(carId)
-  useGetLast10MinsPathLineData(carId)
 
     return (
         <div className="w-full h-full  rounded shadow">

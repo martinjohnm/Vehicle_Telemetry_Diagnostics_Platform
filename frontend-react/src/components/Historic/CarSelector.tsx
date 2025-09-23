@@ -23,6 +23,10 @@ const setSelctedCarId = (value : string) => {
       options={carOptions}
       onChange={(selected) => setSelctedCarId(selected?.value ?? "CAR-1")}
       isSearchable
+      defaultValue={{
+          value : "CAR-1",
+          label : "CAR-1"
+      }}
       placeholder="Select a car..."
       className=" z-50"
     />

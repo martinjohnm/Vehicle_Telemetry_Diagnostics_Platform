@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 import type { carId } from "../types/store";
 import type { Timedata, TimeIntervalType } from "../types/historydata";
-import type { MapState, TimeIntervalToQueryPath } from "../types/car";
+import type { CarData, MapState, SpeedBin, TimeIntervalToQueryPath } from "../types/car";
 
 // Example: store selected car id
 export const selectedCarState = atom<carId[] | null>({
@@ -40,3 +40,22 @@ export const pathLineTimeInterval = atom<TimeIntervalToQueryPath>({
   default : 10
 })
 
+
+
+// single car analytics states
+export const topTenCarState = atom<[string, CarData][]>({
+  key : "topTenCarState",
+  default : []
+})
+export const speedHistogramState = atom<SpeedBin[]>({
+  key : "speedHistogramState",
+  default : []
+})
+export const latLngByCityState = atom<{ key: string; val: [number, number]; }[]>({
+  key : "latLngByCityState",
+  default : []
+})
+export const avgSpeedFromwsState = atom<number>({
+  key : "",
+  default : 0
+})

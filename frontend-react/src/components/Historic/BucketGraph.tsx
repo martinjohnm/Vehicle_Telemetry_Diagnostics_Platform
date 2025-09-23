@@ -28,10 +28,11 @@ export const BucketGraph = () => {
             angle={-90} 
             position="insideLeft" 
             style={{ textAnchor: 'middle' }}
+            className="font-bold"
           />
         </YAxis>
         <Tooltip />
-        <Line type="monotone" dataKey="avg_speed" stroke="#8884d8" />
+        <Line type="monotone" dataKey="avg_speed" stroke="#8884d8" className="font-bold"/>
       </LineChart>
     </div>
   );
