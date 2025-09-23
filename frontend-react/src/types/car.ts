@@ -39,3 +39,8 @@ export interface MapState {
   status : string;
   timestamp  :string
 }
+
+export interface PathState {
+  latitude : number;
+  longitude : number;
+}

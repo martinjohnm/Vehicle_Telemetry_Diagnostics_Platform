@@ -3,87 +3,25 @@ import 'leaflet/dist/leaflet.css';
 import { useRecoilValue } from "recoil";
 import { singleCarMapState, singleCarPathCoords } from "../../store/atoms";
 import { useSubscribeSingleCarChannel } from "../../hooks/useSubscribeSingleCarChannel";
+import { useGetLast10MinsPathLineData } from "../../hooks/useGetLast10MinsPathLineData";
 
 
 
 export const MapviewComponent = ({car}: {car: string}) => {
-
-  // const [carid, setCarId] = useRecoilState(selectedCarId)
-
-  // setCarId(car)
+  
   const position: [number, number] = [50.8295, 12.9150];
-  // const [pathCoords, setPathCoords] = useState<[number, number][]>([]);
-
-  // const [map? , setmap?] = useState<MapState>({
-  //   type : "",
-  //   id: 0,
-  //   city : "",
-  //   speed : 0,
-  //   latitude : 0,
-  //   longitude : 0,
-  //   fuel_level : 0,
-  //   direction : 0,
-  //   status : "",
-  //   timestamp  :""
-  // })
-
-
-
   const path = useRecoilValue(singleCarPathCoords)
   const map = useRecoilValue(singleCarMapState)
 
   useSubscribeSingleCarChannel(car)
-
-
-  
-  // useEffect(() => {
-  //   const init = async () => {
-
-  //     SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE", "params" : [car]})
-
-  //     SignalingManager.getInstance().registerCallBack("CAR", (data: IncomingMessage) => {
-  //       setmap?({
-  //         type : data.type,
-  //         id: data.id,
-  //         city : data.city,
-  //         speed : data.speed,
-  //         latitude : data.latitude,
-  //         longitude : data.longitude,
-  //         fuel_level : data.fuel_level,
-  //         direction : data.direction,
-  //         status : data.status,
-  //         timestamp  :data.timestamp
-  //       })
-
-  //       setPathCoords((prev) => [...prev, [data.latitude, data.longitude]])
-
-        
-  //     }, `CAR-${car}`)
-
-  //     return () => {
-  //       console.log("deregisted");
-        
-  //       SignalingManager.getInstance().sendMessage({"method" : "UNSUBSCRIBE", "params" : [car]})
-  //       SignalingManager.getInstance().deregisterCallBack("CAR", `CAR-${car}`)
-  //     }
-
-  //   }
-
-  //   init()
-
-
-    
-  // }, [carid, car])
-
-
-
+  useGetLast10MinsPathLineData(car)
     return (
         <div className="w-full h-full  rounded shadow">
           <div className="p-2 justify-center items-center flex">
             <div className='font-bold'>{`Driving at ${map?.speed} km/h in ${map?.city}`}</div>
           </div>
       <MapContainer
-        center={position}
+        center={[map?.latitude ?? position[0],map?.longitude ?? position[1]]}
         zoom={14}
         scrollWheelZoom={true}
         style={{ height: '100%', width: '100%' }}

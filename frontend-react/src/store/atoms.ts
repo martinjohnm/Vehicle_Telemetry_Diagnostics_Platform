@@ -35,3 +35,4 @@ export const singleCarPathCoords = atom<[number, number][]>({
   key : "singleCarPathCoords",
   default : []
 })
+
