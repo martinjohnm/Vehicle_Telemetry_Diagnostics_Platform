@@ -87,8 +87,10 @@ export const AnalyticsPage = () => {
                     
                 </div>
                 
-            
-                {<BucketGraph/>}
+                <div className="flex justify-center gap-1">
+                    {<BucketGraph/>}
+                </div>
+                
             </div>
         </div>
         
