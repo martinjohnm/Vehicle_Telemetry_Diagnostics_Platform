@@ -94,7 +94,6 @@ export class SubsciptionManager {
 
         const existingAnalytics = this.analyticsSubscriptions.get(userId)
 
-        console.log(existingAnalytics);
         
 
         if (existingAnalytics) {
