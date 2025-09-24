@@ -40,16 +40,16 @@ export const LandingPage = () => {
             { top_ten_carsdata_from_ws.length !=0 && <FleetSpeedChart avgSpeed={avg_fleet_speed} maxSpeed={top_ten_carsdata_from_ws[0][1].speed}/>}
             <TopTenCarLeaderBoard cars={top_ten_carsdata_from_ws}/>
         </div>
-        <div className="grid grid-cols-6 py-0.5 gap-0.5">
+        <div className="grid grid-cols-1 md:grid-cols-3 py-0.5 gap-0.5 h-full">
             
             
-            <div className="col-span-4 h-full">
-              <div className="col-span-2 p-2 h-full">
+            <div className="col-span-1 md:col-span-2">
+              
                 <MapContainer
                   center={position}
                   zoom={5}
                   scrollWheelZoom={true}
-                  style={{ width: '100%', height : "100%" }}
+                  style={{ height: '80vh', width: '100%' }}
                   >
                       <TileLayer
                               attribution='&copy; OpenStreetMap contributors'
@@ -57,10 +57,9 @@ export const LandingPage = () => {
                             />
                   <DensityHeatmap cells={aggr_lat_lng_by_city}/>
                 </MapContainer>
-              </div>
             </div>
             
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-1">
                 <div className="p-4"><p>{"No of cars in speed range"}</p></div>
                 <Histogram bins={speed_histogram} width={600} height={400}/>
             </div>
