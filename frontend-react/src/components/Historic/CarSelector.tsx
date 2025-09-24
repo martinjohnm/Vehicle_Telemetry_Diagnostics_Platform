@@ -1,5 +1,5 @@
 import Select from "react-select";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedCarId, selectedCarState } from "../../store/atoms";
 
 
@@ -7,7 +7,7 @@ export default function CarSelector() {
 
 
 const cars = useRecoilValue(selectedCarState)
-const setCarId = useSetRecoilState(selectedCarId)
+const [carId, setCarId] = useRecoilState(selectedCarId)
 
 const carOptions = cars?.map(car => ({
     value : car.id,
@@ -21,14 +21,14 @@ const setSelctedCarId = (value : string) => {
   return (
     <Select
       options={carOptions}
-      onChange={(selected) => setSelctedCarId(selected?.value ?? "CAR-1")}
+      onChange={(selected) => setSelctedCarId(selected?.value ?? carId)}
       isSearchable
       defaultValue={{
-          value : "CAR-1",
-          label : "CAR-1"
+          value : carId,
+          label : carId
       }}
       placeholder="Select a car..."
-      className=" z-50"
+      className=" z-50 w-full"
     />
   );
 }

@@ -7,14 +7,13 @@ import { Link } from "react-router-dom";
 import CarSelector from "../components/Historic/CarSelector";
 import { useRecoilValue } from "recoil";
 import { avgSpeedFromwsState, latLngByCityState, selectedCarId, speedHistogramState, topTenCarState } from "../store/atoms";
-import { useGetAnalytics } from "../hooks/useGetAnalytics";
+import { useGetLiveData } from "../hooks/useGetLiveData";
 
 
 
 export const LandingPage = () => {
 
-    useGetAnalytics()
- 
+    useGetLiveData()
     const position: [number, number] = [50.1109, 8.6821];
     const top_ten_carsdata_from_ws = useRecoilValue(topTenCarState)
     const speed_histogram = useRecoilValue(speedHistogramState)
@@ -25,14 +24,15 @@ export const LandingPage = () => {
     return <div className="p-2 h-screen">
         <div className="w-full bg-slate-100 rounded-2xl flex items-center justify-between p-6">
             <p className="text-4xl p-2 w-full">Telematics dashboard</p>
-            <div className="flex justify-center w-full">
-              <Link to={"/analytics"}><button className="p-2 bg-green-400 rounded-md text-medium font-bold hover:bg-green-500 cursor-pointer">See analytics</button></Link>
+            <div className="grid grid-cols-3 w-full bg-green-200">
+              <Link to={"/analytics"}><button className="p-2 bg-green-400 w-full rounded-md text-medium font-bold hover:bg-green-500 cursor-pointer">See analytics</button></Link>
               
-                  <CarSelector/>
-            
-              <Link className="" to={`/car/${selectedCarIdd}`}>
+              <div className="w-full">
+                <CarSelector/>
+              </div>
+              <Link className="w-full" to={`/car/${selectedCarIdd}`}>
               
-                <button className="p-2 bg-green-400 rounded-md text-medium font-bold hover:bg-green-500 cursor-pointer">View By carId</button>
+                <button className="p-2 bg-green-400 rounded-md w-full text-medium font-bold hover:bg-green-500 cursor-pointer">View By carId</button>
               </Link>
             </div>
         </div>
