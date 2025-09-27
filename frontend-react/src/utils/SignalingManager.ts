@@ -83,10 +83,14 @@ export class SignalingManager {
 
 
     async registerCallBack(type: string, callback: any, id: string) {
+        console.log("callback registered");
+        
         this.callBacks.set(type, (this.callBacks.get(type) || []).concat({callback, id}))
     }
 
     async deregisterCallBack(type : string, id : string) {
+        console.log("callback dereg");
+        
         if(this.callBacks.has(type)) {
             const newCallBacks = this.callBacks.get(type)?.filter(callback => callback.id == id ) ?? []
             this.callBacks.set(type, newCallBacks)

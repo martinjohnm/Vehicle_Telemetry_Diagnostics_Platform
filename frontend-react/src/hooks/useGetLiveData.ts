@@ -5,7 +5,7 @@ import { SignalingManager } from "../utils/SignalingManager"
 import type { AnalyticsData, CarData, SpeedBin } from "../types/car"
 
 
-export const useGetAnalytics = () => {
+export const useGetLiveData = () => {
 
     const setTopTenCars = useSetRecoilState(topTenCarState)
     const setSpeedHistogram = useSetRecoilState(speedHistogramState)

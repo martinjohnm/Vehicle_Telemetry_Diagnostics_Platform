@@ -12,8 +12,6 @@ export const useSubscribeSingleCarChannel = (car: string) => {
     const setMap = useSetRecoilState(singleCarMapState)
 
     useEffect(() => {
-        console.log("registered", car);
-        
         SignalingManager.getInstance().sendMessage({"method" : "SUBSCRIBE", "params" : [car]})
 
         SignalingManager.getInstance().registerCallBack("CAR", (data: IncomingMessage) => {
@@ -31,14 +29,9 @@ export const useSubscribeSingleCarChannel = (car: string) => {
             })
 
             setPath((prev) => [...prev.slice(1), [data.latitude, data.longitude]])
-            console.log("callback called");
-            
             
         }, `CAR-${car}`)
-
         return () => {
-            console.log("deregisted");
-        
             SignalingManager.getInstance().sendMessage({"method" : "UNSUBSCRIBE", "params" : [car]})
             SignalingManager.getInstance().deregisterCallBack("CAR", `CAR-${car}`)
             setMap(null)
