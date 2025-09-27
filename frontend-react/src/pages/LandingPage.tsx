@@ -49,7 +49,7 @@ export const LandingPage = () => {
                   center={position}
                   zoom={5}
                   scrollWheelZoom={true}
-                  style={{ height: '80vh', width: '100%' }}
+                  style={{ height: '60vh', width: '100%' }}
                   >
                       <TileLayer
                               attribution='&copy; OpenStreetMap contributors'
