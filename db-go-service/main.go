@@ -31,6 +31,6 @@ func main() {
 		go internal.StartWorker(ctx, rdb, db, cfg.StreamKey, cfg.GroupName, fmt.Sprintf("worker-%d", i), batchSize)
 	}
 
-	log.Println("🚀 Service running...")
+	log.Println("db go Service running...")
 	select {}
 }

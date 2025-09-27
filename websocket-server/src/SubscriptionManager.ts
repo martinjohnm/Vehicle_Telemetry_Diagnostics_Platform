@@ -17,7 +17,12 @@ export class SubsciptionManager {
     public analyticsReverseSubscriptions : Map<string, string[]> = new Map();
 
     private constructor() {
-        this.redisClient = createClient();
+        this.redisClient = createClient({
+            socket: {
+                host: process.env.REDIS_HOST,
+                port: Number(process.env.REDIS_PORT),
+            },
+        });
         this.redisClient.connect();
     }
 
