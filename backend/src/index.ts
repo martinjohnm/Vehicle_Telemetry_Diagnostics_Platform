@@ -11,6 +11,7 @@ const app = express()
 // Allow requests from React dev server (port 5173)
 
 
+
 app.use(cors({
   origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -20,9 +21,9 @@ app.use(express.json())
 
 app.use("/api/v1/car", carRouter)
 
+const port = Number(process.env.PORT) ?? 3003
 
-
-app.listen(3003, () => {
+app.listen(port, () => {
     console.log("server is running on 3003");
     
 })

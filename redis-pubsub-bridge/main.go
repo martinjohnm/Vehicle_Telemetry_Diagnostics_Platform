@@ -37,7 +37,11 @@ func getEnv(k, def string) string {
 }
 
 var (
-	redisAddr    = getEnv("REDIS_ADDR", "127.0.0.1:6379")
+
+	
+	redisHost = getEnv("REDIS_HOST", "127.0.0.1")
+    redisPort = getEnv("REDIS_PORT", "6379")
+    redisAddr = fmt.Sprintf("%s:%s", redisHost, redisPort) // combine host and port
 	redisPass    = getEnv("REDIS_PASS", "")
 	pubsubChan   = getEnv("PUBSUB_CHANNEL", "cars:data")
 	streamName   = getEnv("STREAM_NAME", "telematics_stream")

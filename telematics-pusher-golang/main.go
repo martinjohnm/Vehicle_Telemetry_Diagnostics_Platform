@@ -3,19 +3,32 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"telematics-pusher-golang/manager"
 	"time"
 )
 
+// ---- config (env-overridable) ----
+func getEnv(k, def string) string {
+	if v := os.Getenv(k); v != "" {
+		return v
+	}
+	return def
+}
 
 func main() {
 	log.Println("Starting Car Telematics Pusher Service for 5000 cars...")
 
-	carManager := manager.NewCarManager("localhost:6379", "car:telemetry")
+	redisHost := getEnv("REDIS_HOST", "127.0.0.1")
+    redisPort := getEnv("REDIS_PORT", "6379")
+    redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort) // combine host and port
+
+	carManager := manager.NewCarManager(redisAddr, "car:telemetry")
 	
 
 	 // Load data from the file
-    if err := carManager.LoadFromJSON("cars_5000_germany_neighbours.json"); err != nil {
+	carsPath:= getEnv("CARS_FILE", "cars_5000_germany_neighbours.json")
+    if err := carManager.LoadFromJSON(carsPath); err != nil {
         fmt.Println("Error loading data:", err)
         return
     }

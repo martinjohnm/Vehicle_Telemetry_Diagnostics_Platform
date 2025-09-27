@@ -22,7 +22,12 @@ export class CarManager {
     private carLatAndLngArrByCity : Map<string, [number, number][]> = new Map()
 
     private constructor() {
-        this.redisClient = createClient();
+        this.redisClient = createClient({
+            socket: {
+                host: process.env.REDIS_HOST,
+                port: Number(process.env.REDIS_PORT),
+            },
+        });
         this.redisClient.connect();
         this.subscribe("cars:data")
         this.initBuckets(0,280,20)

@@ -14,6 +14,11 @@ services:
       POSTGRES_DB: my_database
       POSTGRES_USER: your_user
       POSTGRES_PASSWORD: your_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U your_user -d my_database"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - timescale-data:/var/lib/postgresql/data
   redis_car_telematics: 
@@ -21,7 +26,95 @@ services:
     container_name: redis_car_telematics
     ports: 
       - "6379:6379"
-    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  frontend:
+    image: "martinjohnm/car-telematics-frontend:latest"
+    container_name: frontend
+    ports:
+      - "5173:5173"
+  websocket_server:
+    image: "martinjohnm/car-telematics-websocket-server:latest"
+    container_name: websocket_server
+    ports:
+      - "3001:3001"
+    depends_on:
+      redis_car_telematics:
+        condition: service_healthy
+    environment:
+      PORT: 3001
+      REDIS_HOST: redis_car_telematics
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: yourpassword
+  backend_server:
+    image: "martinjohnm/car-telematics-backend-server:latest"
+    container_name: backend_server
+    ports:
+      - "3003:3003"
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    environment:
+      DB_USER: your_user
+      DB_HOST: timescaledb
+      DB_NAME: my_database
+      DB_PASSWORD: your_password
+      DB_PORT: 5432
+      PORT: 3003
+  db_go_service:
+    image: "martinjohnm/db-go-service:latest"
+    container_name: db_go_service
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+      redis_car_telematics:
+        condition: service_started
+    environment:
+      REDIS_HOST: redis_car_telematics
+      REDIS_PORT: 6379
+      DB_USER: your_user
+      DB_HOST: timescaledb
+      DB_NAME: my_database
+      DB_PASSWORD: your_password
+      DB_PORT: 5432
+      STREAM_KEY: telematics_stream
+      GROUP_NAME: db-service-group
+  go_redis_pubsub_bridge:
+    image: "martinjohnm/go-redis-pusub-bridge:latest"
+    container_name: go_redis_pubsub_bridge
+    depends_on:
+      redis_car_telematics:
+        condition: service_healthy
+      db_go_service:
+        condition: service_started
+    environment:
+      REDIS_HOST: redis_car_telematics
+      REDIS_PORT: 6379
+      CHANNEL_PATTERN: cars:data
+      REDIS_STREAM: telematics_stream
+      PUBSUB_CHANNEL: cars:data
+      STREAM_KEY: telematics_stream
+      REDIS_PASS: ""
+
+  go_telematics_pusher:
+    image: "martinjohnm/go-telematics-pusher:latest"
+    container_name: go_telematics_pusher
+    depends_on:
+      redis_car_telematics:
+        condition: service_healthy
+      db_go_service:
+        condition: service_started
+      go_redis_pubsub_bridge:
+        condition: service_started
+    volumes:
+      - "./cars_5000_germany_neighbours.json:/app/cars.json:ro"
+    environment:
+      REDIS_HOST: redis_car_telematics
+      REDIS_PORT: 6379
+      CARS_FILE: /app/cars.json
 
 volumes:
   timescale-data:

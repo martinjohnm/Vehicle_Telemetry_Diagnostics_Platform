@@ -22,6 +22,7 @@ target/
 # Ignore all .env files everywhere
 **/.env
 **/.env.*
+!env.example
 
 # But do NOT ignore env.example files anywhere
 !**/env.example

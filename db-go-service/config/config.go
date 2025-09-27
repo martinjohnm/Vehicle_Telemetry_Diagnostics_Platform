@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 type Config struct {
 	RedisAddr string
@@ -9,10 +12,21 @@ type Config struct {
 	GroupName string
 }
 
+
 func Load() Config {
+
+	redisHost:= getEnv("REDIS_HOST", "localhost")
+	redisPort:= getEnv("REDIS_PORT", "6379")
+
+	dbHost := getEnv("DB_HOST", "localhost")
+    dbPort := getEnv("DB_PORT", "5432")
+    dbUser := getEnv("DB_USER", "your_user")
+    dbPassword := getEnv("DB_PASSWORD", "your_password")
+    dbName := getEnv("DB_NAME", "my_database")
+
 	return Config{
-		RedisAddr: getEnv("REDIS_ADDR", "localhost:6379"),
-		DBUrl:     getEnv("DB_URL", "postgres://your_user:your_password@localhost:5432/my_database?sslmode=disable"),
+		RedisAddr: fmt.Sprintf("%s:%s", redisHost, redisPort),
+		DBUrl:     fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName),
 		StreamKey: getEnv("STREAM_KEY", "telematics_stream"),
 		GroupName: getEnv("GROUP_NAME", "db-service-group"),
 	}
