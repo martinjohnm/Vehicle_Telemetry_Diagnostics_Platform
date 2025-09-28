@@ -32,12 +32,16 @@ services:
       timeout: 5s
       retries: 5
   frontend:
-    image: "martinjohnm/car-telematics-frontend:latest"
+    build:
+      context: ../frontend-react
+      dockerfile: Dockerfile
     container_name: frontend
     ports:
       - "5173:5173"
   websocket_server:
-    image: "martinjohnm/car-telematics-websocket-server:latest"
+    build:
+      context: ../websocket-server
+      dockerfile: Dockerfile
     container_name: websocket_server
     ports:
       - "3001:3001"
@@ -50,7 +54,9 @@ services:
       REDIS_PORT: 6379
       REDIS_PASSWORD: yourpassword
   backend_server:
-    image: "martinjohnm/car-telematics-backend-server:latest"
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
     container_name: backend_server
     ports:
       - "3003:3003"
@@ -65,7 +71,9 @@ services:
       DB_PORT: 5432
       PORT: 3003
   db_go_service:
-    image: "martinjohnm/db-go-service:latest"
+    build:
+      context: ../db-go-service
+      dockerfile: Dockerfile
     container_name: db_go_service
     depends_on:
       timescaledb:
@@ -83,7 +91,9 @@ services:
       STREAM_KEY: telematics_stream
       GROUP_NAME: db-service-group
   go_redis_pubsub_bridge:
-    image: "martinjohnm/go-redis-pusub-bridge:latest"
+    build:
+      context: ../redis-pubsub-bridge
+      dockerfile: Dockerfile
     container_name: go_redis_pubsub_bridge
     depends_on:
       redis_car_telematics:
@@ -100,7 +110,9 @@ services:
       REDIS_PASS: ""
 
   go_telematics_pusher:
-    image: "martinjohnm/go-telematics-pusher:latest"
+    build:
+      context: ../telematics-pusher-golang
+      dockerfile: Dockerfile
     container_name: go_telematics_pusher
     depends_on:
       redis_car_telematics:
