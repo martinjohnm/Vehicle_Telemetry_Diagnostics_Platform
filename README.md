@@ -37,4 +37,4 @@ This vehicle telematics system is designed to handle real-time vehicle data inge
 
 
 ### Diagram
-![Architecture Diagram](./architecture.png)
+![Architecture Diagram](./architecture-diagram.png)
