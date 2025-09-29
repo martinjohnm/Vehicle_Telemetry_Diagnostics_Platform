@@ -20,14 +20,17 @@ This vehicle telematics system is designed to handle real-time vehicle data inge
 
 ### Data Flow
 1. Vehicles send real-time telemetry events to the Go backend API.
-2. The Go backend validates events and pushes them to Redis Streams.
-3. Node.js WebSocket server listens to Redis Streams and broadcasts updates to Next.js clients.
-4. React.js frontend receives live updates and displays vehicle statuses and analytics.
-5. Historical data is saved to the database for long-term storage and offline analysis.
+2. The Go backend validates events and pushes them to Redis Pub sub.
+3. The pubsub bridge service pushes the events to both db-service to store it in tiemscaledb and to the websocket server for live analytics.
+4. The db-go-service consumes events from the redis streams and write to timescaledb using go-routines parallel processing. 
+5. Node.js WebSocket server listens to Redis Pubsub and broadcasts updates to Next.js clients.
+6. React.js frontend receives live updates and displays vehicle statuses and analytics.
+7. Historical data is saved to the database for long-term storage and offline analysis.
 
 ### Key Design Decisions
 - **Go backend** chosen for low-latency, high-throughput data processing.
-- **Redis Streams** used over Pub/Sub for durability and message persistence.
+- **Redis Pubsub** used Redis Pub/Sub for low-latency live analytics via WebSockets.
+- **Redis Streams** used Redis Streams for reliable DB persistence.
 - **Node.js WebSocket server** to efficiently manage client connections and real-time data push.
 - **React.js frontend** easy to build responsive UI.
 - Database choice (PostgreSQL/TimescaleDB) supports complex queries and time-series an
