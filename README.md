@@ -33,7 +33,7 @@ This vehicle telematics system is designed to handle real-time vehicle data inge
 - **Redis Streams** used Redis Streams for reliable DB persistence.
 - **Node.js WebSocket server** to efficiently manage client connections and real-time data push.
 - **React.js frontend** easy to build responsive UI.
-- Database choice (PostgreSQL/TimescaleDB) supports complex queries and time-series an
+- **TimescaleDB** supports complex queries and time-series analytics
 
 
 ### Diagram
