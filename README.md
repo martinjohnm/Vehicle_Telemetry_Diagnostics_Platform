@@ -38,3 +38,4 @@ This vehicle telematics system is designed to handle real-time vehicle data inge
 
 ### Diagram
 ![Architecture Diagram](./architecture-diagram.png)
+A video walkthrough of the project with 5000 cars : https://youtu.be/HrtLfLkjs70
